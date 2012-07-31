@@ -10,7 +10,31 @@ The ant script executes the following actions
 2. installs it
 3. configures the stack
 
-Afterwards, the CI stack is ready to be used. For SAP Portal developers the ant scripts available help setting up a CI project:
+What gets downloaded?
+
+For the server side:
+- Redmine 2
+- Sonar 3
+- Jenkins
+- MySQL 5 server
+- MySQL 5 connectorJ
+- SCM Manager
+- jRuby 1.6.7
+- Tomcat 7
+- selenium 2
+- OpenDJ
+- Solr 3.5
+
+For the client tools (development and CI ant tasks)
+- Ant
+- Ivy
+- jMeter
+- curl
+- svnkit
+- TestNG
+
+
+After the install script run through the CI stack is ready to be used. For SAP Portal developers there are ant scripts available to help setting up a CI project:
 1. Creates a SVN repository
 2. Creates a Jenkins job
 3. Creates the Redmine project

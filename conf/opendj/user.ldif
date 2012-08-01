@@ -1,0 +1,81 @@
+dn: LDAP_USERS_BASE_DN,LDAP_BASE_DN
+objectClass: organizationalUnit
+objectClass: top
+ou: users
+
+dn: LDAP_GROUPS_BASE_DN,LDAP_BASE_DN
+objectClass: organizationalUnit
+objectClass: top
+ou: groups
+
+dn: cn=admin,LDAP_USERS_BASE_DN,LDAP_BASE_DN
+cn: admin
+givenName: admin
+mail: admin@yahoo.de
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: top
+sn: admin
+uid: admin
+userPassword:: e1NTSEF9bmxVN3ZQVjh2ZzlKVGVHYS82RVFJYlhWeTIwS25PZ2lwbVkwTHc9PQ==
+
+dn: uid=sonar,LDAP_USERS_BASE_DN,LDAP_BASE_DN
+cn: sonar
+givenName: sonar
+mail: sonar@yahoo.de
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: top
+sn: sonar
+uid: sonar
+userPassword:: e1NTSEF9Y2lqMWtlVFFjS0tlenlqMWZGSFYyUHN2Zk03eE90UWZobk1SYnc9PQ==
+
+dn: cn=redmine,LDAP_USERS_BASE_DN,LDAP_BASE_DN
+cn: redmine
+givenName: redmine
+mail: redmine@yahoo.de
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: top
+sn: redmine
+uid: redmine
+userPassword:: e1NTSEF9OUJZK3VONWR5UThDV3BzdElob0RZcSt6RU5uWFJnd3FYZkVNVkE9PQ==
+
+dn: cn=jenkins,LDAP_USERS_BASE_DN,LDAP_BASE_DN
+cn: jenkins
+givenName: jenkins
+mail: jenkins@yahoo.de
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: top
+sn: jenkins
+uid: jenkins
+userPassword:: e1NTSEF9OWJEcTRRUk1MV2RLcExrcG1JRjFoMVZlY3YxSVZaQVhVakNsZmc9PQ==
+
+dn: cn=scm,LDAP_USERS_BASE_DN,LDAP_BASE_DN
+cn: scm
+givenName: scm
+mail: scm@yahoo.de
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: top
+sn: scm
+uid: scm
+userPassword:: e1NTSEF9ellReldkM1hPVUJYMWZKeWhCUVRPVU1MNGJtZnFCN0VZZ1ZNbFE9PQ==
+
+dn: cn=developer,LDAP_USERS_BASE_DN,LDAP_BASE_DN
+cn: developer
+givenName: developer
+mail: developer@yahoo.de
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: top
+sn: developer
+uid: developer
+userPassword:: e1NTSEF9ZDRpTlRCcXowVnl5M2UvU3VHZzhFUUxEYjUyVDdQai9HUTJ2a0E9PQ==

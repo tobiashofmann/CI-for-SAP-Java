@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ivy-module version="1.0">
+    <info organisation="IVY.ORGANISATION" module="IVY.MODULE" status="release" revision="IVY.REVISION">
+    </info>
+    <configurations>
+        <conf name="default" />
+        <conf name="provided" />
+        <conf name="test" />
+    </configurations>
+    <publications>
+        <artifact name="IVY.MODULE" type="jar" />
+    </publications>
+</ivy-module>

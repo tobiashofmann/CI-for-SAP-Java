@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<classpath>
+    <path>/sonia/scm/plugins/scm-jenkins-plugin/1.5/scm-jenkins.jar</path>
+    <path>/sonia/scm/plugins/scm-auth-ldap-plugin/1.14/scm-auth-ldap.jar</path>
+</classpath>

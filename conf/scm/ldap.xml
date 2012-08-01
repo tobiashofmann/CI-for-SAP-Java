@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ldap-config>
+    <attribute-name-fullname>cn</attribute-name-fullname>
+    <attribute-name-group>memberOf</attribute-name-group>
+    <attribute-name-id>uid</attribute-name-id>
+    <attribute-name-mail>mail</attribute-name-mail>
+    <base-dn>LDAP_ROOT_DN</base-dn>
+    <connection-dn>LDAP_MANAGER_DN</connection-dn>
+    <connection-password>LDAP_MANAGER_PW</connection-password>
+    <host-url>ldap://LDAP_HOST:LDAP_PORT</host-url>
+    <profile>OpenDS/OpenDJ</profile>
+    <search-filter>(&amp;(objectClass=inetOrgPerson)(uid={0}))</search-filter>
+    <search-filter-group>(&amp;(objectClass=groupOfUniqueNames)(uniqueMember={0}))</search-filter-group>
+    <search-scope>sub</search-scope>
+    <unit-groups>LDAP_GROUP_SEARCH_BASE</unit-groups>
+    <unit-people>LDAP_USER_SEARCH_BASE</unit-people>
+    <enabled>true</enabled>
+    <enable-starttls>false</enable-starttls>
+    <enable-nested-ad-groups>false</enable-nested-ad-groups>
+</ldap-config>

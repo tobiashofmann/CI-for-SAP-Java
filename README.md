@@ -43,3 +43,31 @@ a) call Sonar
 b) deploys the portal archive
 c) execute unit tests with TestNG
 d) executes functional tests with selenium and jMeter
+
+
+Default installation:
+Tomcat: http://localhost:9090
+
+Sonar: http://localhost:9090/sonar
+
+Jenkins: http://localhost:9090/jenkins
+
+SCM Manager: http://localhost:9090/scm
+User: scmadmin / scmadmin
+
+Solr: http://localhost:9090/solr
+Admin page: /solr/admin
+
+OpenDJ: localhost, port 389
+cn=Directory Manager
+Password: ch4nge
+
+users created in LDAP:
+sonar / sonar
+developer / developer
+admin / admin
+jenkins / jenkins
+redmine / redmine
+scm / scm
+
+The user used for creating later the SAP Portal projects is the developer user.

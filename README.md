@@ -10,6 +10,18 @@ The ant script executes the following actions
 2. installs it
 3. configures the stack
 
+Space:
+In total, its around 545 MB that will get downloaded. The time needed to extract, install and configure the framework depends on your machine, but expect it to be between 30 Minutes to 1 hour.
+A fresh install takes 2.2 GB on disk; the downloaded installation files are not deleted. You can delete the dir ./downloads to free up space.
+
+Proxy:
+When you are behind a proxy, configure the proxy parameters in the file conf/project.properties:
+proxy.host = IP or name of proxy: 192.168.1.1
+proxy.port = Port of proxy: 8080
+proxy.user = your proxy user: username
+proxy.pass = your proxy user password: password
+
+
 What gets downloaded?
 
 For the server side:

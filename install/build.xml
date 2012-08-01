@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="install" name="Install SDE">
+	
+	<property file="project.properties"/>
+
+	<property environment="env"/>
+	
+	<target name="probe-proxy">
+	    <condition property="proxy.enabled">
+	      <and>
+	        <isset property="proxy.host"/>
+	        <isreachable host="${proxy.host}"/>
+	      </and>
+	    </condition>
+		<echo message="Proxy enabled: ${proxy.enabled}"/>
+	  </target>
+
+	  <target name="proxy" depends="probe-proxy" if="proxy.enabled">
+	    <setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}"
+	      proxyuser="${proxy.user}" proxypassword="${proxy.pass}"/>
+	  	<property name="env.HTTP_PROXY" value="http://${proxy.user}:${proxy.pass}@${proxy.host}:${proxy.port}"/>
+	  </target>
+	
+	<!--
+	Main target. Does all
+	-->
+	<target name="install" depends="proxy">
+		<ant antfile="download.ant" target="download"/>
+		<ant antfile="mysql.ant" target="install"/>
+		<ant antfile="opendj.ant" target="install"/>
+		<ant antfile="jruby.ant" target="install"/>
+		<ant antfile="tomcat.ant" target="install"/>		
+		<ant antfile="redmine.ant" target="install"/>
+		<ant antfile="jenkins.ant" target="install"/>
+		<ant antfile="sonar.ant" target="install"/>
+		<ant antfile="solr.ant" target="install"/>
+		<ant antfile="scm.ant" target="install"/>
+		<ant antfile="curl.ant" target="install"/>
+		<ant antfile="ant.ant" target="install"/>
+		<ant antfile="svn.ant" target="install"/>
+		<ant antfile="ivy.ant" target="install"/>
+		<ant antfile="jmeter.ant" target="install"/>
+		<ant antfile="selenium.ant" target="install"/>
+		<ant antfile="TestNG.ant" target="install"/>
+		
+		<!-- post installation tasks -->
+		<copy file="${conf.dir}/run.ant" todir="."/>
+		<replace file="run.ant" token="MYSQL_DIR" value="${basedir}/${install.dir.mysql}"></replace>
+		<replace file="run.ant" token="MYSQL_PW" value="${mysql.root.pw}"></replace>
+		<replace file="run.ant" token="OPENDJ_DIR" value="${basedir}/${install.dir.opendj}"></replace>
+		<replace file="run.ant" token="TOMCAT_DIR" value="${basedir}/${install.dir.tomcat}"></replace>
+		<replace file="run.ant" token="JENKINS_HOME_DIR" value="${basedir}/${install.dir.jenkins}"></replace>
+		<replace file="run.ant" token="SELENIUM_DIR" value="${basedir}/${install.dir.selenium}"></replace>
+	</target>
+	
+</project>	

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="install" name="Ant setup">
+	<property file="project.properties"/>
+	<property file="urls.properties"/>
+
+
+	
+	<!--
+	Download ant zip file
+	-->
+	<target name="download.ant">
+		<!-- download sonar -->
+		<mkdir dir="${download.dir.ant}"/>		
+		<get src="${url.ant}" dest="${download.dir.ant}\ant.zip" 
+		    verbose="true"
+		    usetimestamp="true"/>					
+	</target>
+	
+	
+	<!--
+	Unzip downloaded ant.zip
+	Move sonar to programs/ant
+	-->
+	<target name="ant.install">		
+		<mkdir dir="${install.tmp}"/>
+		<mkdir dir="${install.tmp}/ant"/>
+		<unzip dest="${install.tmp}/ant" src="${download.dir.ant}\ant.zip" overwrite="false"></unzip>
+		<dirset id="ant.tmp.dir" dir="${install.tmp}/ant" includes="apache-ant-*"/>
+		<pathconvert refid="ant.tmp.dir" property="ant.tmp.dir.debug" />
+		<echo message="${ant.tmp.dir.debug}"/>
+		<mkdir dir="${install.dir}/ant"/>
+		<move todir="${install.dir}/ant">
+		    <fileset dir="${ant.tmp.dir.debug}"/>
+		</move>	
+		<echo message="Deleting tmp dir: ${install.tmp}"/>
+		<delete dir="${install.tmp}"/>	
+	</target>
+
+
+	<!--
+	Main target. Does all
+	-->
+	<target name="install">
+		<!-- <antcall target="download.ant"></antcall> -->
+		<antcall target="ant.install"></antcall>
+	</target>
+
+</project>

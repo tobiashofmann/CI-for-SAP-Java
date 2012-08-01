@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="install" name="Curl setup">
+	<property file="project.properties"/>
+	<property file="urls.properties"/>
+
+
+	
+	<!--
+	Download curl zip file
+	-->
+	<target name="download.curl">
+		<!-- download curl -->
+		<mkdir dir="${download.dir.curl}"/>		
+		<get src="${url.curl}" dest="${download.dir.curl}\curl.zip" 
+		    verbose="true"
+		    usetimestamp="true"/>	
+	
+	</target>
+	
+	
+	<!--
+	Unzip downloaded curl.zip
+	Move sonar to programs/curl
+	-->
+	<target name="curl.install">		
+		<mkdir dir="${install.tmp}"/>
+		<mkdir dir="${install.tmp}/curl"/>
+		<unzip dest="${install.tmp}/curl" src="${download.dir.curl}\curl.zip" overwrite="false"></unzip>		
+		<move todir="${install.dir}/curl" file="${install.tmp}/curl/curl.exe"/>
+		<echo message="Deleting tmp dir: ${install.tmp}"/>
+		<delete dir="${install.tmp}"/>
+	</target>
+
+	
+	<!--
+	Main target. Does all
+	-->
+	<target name="install">
+		<!-- <antcall target="download.curl"></antcall> -->
+		<antcall target="curl.install"></antcall>
+	</target>
+
+</project>

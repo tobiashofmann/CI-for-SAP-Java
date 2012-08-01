@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="install" name="Svn setup">
+	<property file="project.properties"/>
+	<property file="urls.properties"/>
+	
+	<!--
+	Download svn zip file
+	-->
+	<target name="download.svn">
+		<!-- download svn -->
+		<mkdir dir="${download.dir.svn}"/>		
+		<get src="${url.svn}" dest="${download.dir.svn}\svn.zip" 
+		    verbose="true"
+		    usetimestamp="true"/>					
+	</target>
+	
+	
+	<!--
+	Unzip downloaded svn.zip
+	Move svn to programs/svn
+	-->
+	<target name="svn.install">		
+		<mkdir dir="${install.tmp}"/>
+		<mkdir dir="${install.tmp}/svn"/>
+		<unzip dest="${install.tmp}/svn" src="${download.dir.svn}\svn.zip" overwrite="false"></unzip>
+		<dirset id="svn.tmp.dir" dir="${install.tmp}/svn" includes="svnkit-*"/>
+		<pathconvert refid="svn.tmp.dir" property="svn.tmp.dir.debug" />
+		<echo message="${svn.tmp.dir.debug}"/>
+		<mkdir dir="${install.dir}/svn"/>
+		<move todir="${install.dir}/svn">
+		    <fileset dir="${svn.tmp.dir.debug}"/>
+		</move>	
+		<echo message="Deleting tmp dir: ${install.tmp}"/>
+		<delete dir="${install.tmp}"/>
+	</target>
+
+
+	<!--
+	Main target. Does all
+	-->
+	<target name="install">
+		<!-- <antcall target="download.svn"></antcall> -->
+		<antcall target="svn.install"></antcall>
+	</target>
+
+</project>

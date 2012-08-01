@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!-- http://www.forgerock.org/opendj.html -->
+	
+<project basedir="." default="install" name="OpenDJ setup">
+	<property file="project.properties"/>
+	<property file="urls.properties"/>
+	
+	<!--
+	Download opendj zip file
+	-->
+	<target name="download.opendj">
+		<!-- download opendj server -->
+		<mkdir dir="${download.dir.opendj}"/>		
+		<get src="${url.opendj}" dest="${download.dir.opendj}\opendj.zip" 
+		    verbose="true"
+		    usetimestamp="true"/>									
+	</target>
+	
+	
+	<!--
+	Unzip downloaded opendj.zip
+	Move opendj to programs/opendj
+	-->
+	<target name="opendj.install">	
+		
+		<mkdir dir="${install.tmp}"/>
+		<mkdir dir="${install.tmp}/opendj"/>
+		<unzip dest="${install.tmp}/opendj" src="${download.dir.opendj}\opendj.zip" overwrite="false"></unzip>
+		<dirset id="opendj.tmp.dir" dir="${install.tmp}/opendj" includes="OpenDJ-*"/>
+		<pathconvert refid="opendj.tmp.dir" property="opendj.tmp.dir.debug" />
+		<echo message="${opendj.tmp.dir.debug}"/>
+		<mkdir dir="${install.dir}/opendj"/>
+		<move todir="${install.dir}/opendj">
+			<fileset dir="${opendj.tmp.dir.debug}"/>
+		</move>			
+		<echo message="Deleting tmp dir: ${install.tmp}"/>
+		<delete dir="${install.tmp}"/>
+		
+		<exec dir="${install.dir}/opendj" executable="cmd.exe" spawn="false">
+			  <arg line="/c setup.bat"/>
+			  <arg value="--cli"/>
+			  <arg value="--no-prompt"/>
+			  <arg value="--addBaseEntry"/>
+			  <arg value="--baseDN"/>
+			  <arg value="${opendj.base.dn}"/>
+			  <arg value="--ldapPort"/>
+			  <arg value="${opendj.port}"/>
+			  <arg value="--adminConnectorPort"/>
+			  <arg value="${opendj.port.admin}"/>
+			  <arg value="--rootUserDN"/>
+			  <arg value="${opendj.bindDN.cn}"/>
+			  <arg value="--rootUserPassword"/>
+			  <arg value="${opendj.bindDN.password}"/>
+		</exec>
+				
+	</target>
+	
+
+	
+	<target name="opendj.users">
+		
+		<!-- check if OpenDJ is really up and running -->
+		<echo>Check if OpenDJ is up and running: (${mysql.startup.delay} seconds)</echo>
+		<sleep seconds="${mysql.startup.delay}" />
+		<condition property="opendj.running">
+		      <socket server="${opendj.host}" port="${opendj.port}"/> 
+		</condition>
+		<echo message="OpenDJ running: ${opendj.running}"/>
+		<antcall target="opendj.start"></antcall>
+		
+		<copy file="conf/opendj/user.ldif" todir="${install.tmp}"/>
+		<replace file="${install.tmp}/user.ldif" token="LDAP_BASE_DN" value="${opendj.base.dn}"/>
+		<replace file="${install.tmp}/user.ldif" token="LDAP_USERS_BASE_DN" value="${opendj.users.base.dn}"/>
+		<replace file="${install.tmp}/user.ldif" token="LDAP_GROUPS_BASE_DN" value="${opendj.groups.base.dn}"/>
+			
+		<!-- import groups, users -->
+		<echo message="OpenDJ: loading users"/>
+		<exec executable="cmd" dir="${basedir}/${install.dir.opendj}/bat" osfamily="Windows" >
+			<arg value="/c"/>
+			<arg value="import-ldif.bat"/>
+			<arg value="--ldifFile"/>
+			<arg value="${basedir}\${install.tmp}\user.ldif"/>
+			<arg value="--backendID"/>
+			<arg value="userRoot"/>
+			<arg value="--append"/>
+			<arg value="--hostName"/>
+			<arg value="${opendj.host}"/>
+			<arg value="--port"/>
+			<arg value="${opendj.port.admin}"/>
+			<arg value="--bindDN"/>
+			<arg value="${opendj.bindDN.cn}"/>
+			<arg value="--bindPassword"/>
+			<arg value="${opendj.bindDN.password}"/>
+			<arg value="--trustAll"/>
+			<arg value="--noPropertiesFile"/>
+		</exec>	
+		<delete file="${install.tmp}/user.ldif"></delete>
+	</target>
+
+	<target name="opendj.start" unless="opendj.running">
+		<echo message="Starting OpenDJ server"/>
+		<exec executable="${basedir}/programs/opendj/bat/start-ds.bat" osfamily="Windows" spawn="true"/>
+	</target>
+		
+	<target name="opendj.stop">
+		<echo message="Starppingting OpenDJ server"/>
+		<exec executable="${basedir}/programs/opendj/bat/stop-ds.bat" osfamily="Windows" spawn="true"/>
+	</target>
+	
+	<!--
+	Main target. Does all
+	-->
+	<target name="install">
+		<!-- <antcall target="download.opendj"></antcall> -->
+		<antcall target="opendj.install"></antcall>
+		<antcall target="opendj.users"></antcall>
+		<antcall target="opendj.stop"></antcall>
+	</target>
+
+</project>
+

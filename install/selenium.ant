@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="install" name="Selenium setup">
+	<property file="project.properties"/>
+	<property file="urls.properties"/>
+
+
+	
+	<!--
+	Download selenium zip file
+	-->
+	<target name="download.selenium">
+		<!-- download selenium server -->
+		<mkdir dir="${download.dir.selenium}"/>		
+		<get src="${url.selenium.server}" dest="${download.dir.selenium}\seleniumserver.jar" 
+		    verbose="true"
+		    usetimestamp="true"/>				
+		<!-- download selenium client Java -->
+		<mkdir dir="${download.dir.selenium}"/>		
+		<get src="${url.selenium.client.java}" dest="${download.dir.selenium}\seleniumclientjava.zip" 
+		    verbose="true"
+		    usetimestamp="true"/>					
+	</target>
+	
+	
+	<!--
+	Unzip downloaded selenium.zip
+	Move selenium to programs/selenium
+	-->
+	<target name="selenium.install.client">		
+		<mkdir dir="${install.tmp}"/>
+		<mkdir dir="${install.tmp}/selenium"/>
+		<unzip dest="${install.tmp}/selenium" src="${download.dir.selenium}\seleniumclientjava.zip" overwrite="false"></unzip>
+		<dirset id="selenium.tmp.dir" dir="${install.tmp}/selenium" includes="selenium-*"/>
+		<pathconvert refid="selenium.tmp.dir" property="selenium.tmp.dir.debug" />
+		<echo message="${selenium.tmp.dir.debug}"/>
+		
+		<mkdir dir="${install.dir}/selenium/client/java"/>
+		<move todir="${install.dir}/selenium/client/java" flatten="true">
+		    <fileset dir="${selenium.tmp.dir.debug}">
+				<include name="**/*.jar"/>
+		    </fileset>
+		</move>	
+		<echo message="Deleting tmp dir: ${install.tmp}"/>
+		<delete dir="${install.tmp}"/>			
+	</target>
+	
+	<target name="selenium.install.server">
+		<mkdir dir="${install.dir}/selenium/server"/>
+		<copy file="${download.dir.selenium}/seleniumserver.jar" todir="${install.dir}/selenium/server"/>
+	</target>
+
+
+	<!--
+	Main target. Does all
+	-->
+	<target name="install">
+		<!-- <antcall target="download.selenium"></antcall> -->
+		<antcall target="selenium.install.server"></antcall>
+		<antcall target="selenium.install.client"></antcall>
+	</target>
+
+</project>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="install" name="TestNG setup">
+	<property file="project.properties"/>
+	<property file="urls.properties"/>
+
+	
+	<!--
+	Download ant zip file
+	-->
+	<target name="download.testng">
+		<!-- download TestNG -->
+		<mkdir dir="${download.dir.testng}"/>		
+		<get src="${url.testng}" dest="${download.dir.testng}\testng.zip" 
+		    verbose="true"
+		    usetimestamp="true"/>					
+	</target>
+	
+	
+	<!--
+	Unzip downloaded testng.zip
+	Move sonar to programs/testng
+	-->
+	<target name="testng.install">
+		<mkdir dir="${install.tmp}"/>
+		<mkdir dir="${install.tmp}/testng"/>
+		<unzip dest="${install.tmp}/testng" src="${download.dir.testng}\testng.zip" overwrite="false"></unzip>
+		<mkdir dir="${install.dir}/testng"/>
+		<move todir="${install.dir}/testng" flatten="true">
+		    <fileset dir="${install.tmp}/testng">
+		    	<include name="*/testng*.jar"/>
+		    </fileset>
+		</move>
+		<echo message="Deleting tmp dir: ${install.tmp}"/>
+		<delete dir="${install.tmp}"/>		
+	</target>
+
+
+
+	<!--
+	Main target. Does all
+	-->
+	<target name="install">
+		<!-- <antcall target="download.testng"></antcall> -->
+		<antcall target="testng.install"></antcall>
+	</target>
+
+</project>

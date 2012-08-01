@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="install" name="Sonar setup">
+	<property file="project.properties" />
+	<property file="urls.properties" />
+
+	<path id="mysql.driver.classpath">
+		<fileset dir="${install.dir}/mysqlconnector">
+			<include name="**/mysql-connector-java*.jar" />
+		</fileset>
+	</path>
+
+
+	<!--
+	Download sonar zip file
+	-->
+	<target name="download.sonar">
+		<!-- download sonar -->
+		<mkdir dir="${download.dir.sonar}" />
+		<get src="${url.sonar}" dest="${download.dir.sonar}\sonar.zip" verbose="true" usetimestamp="true" />
+	</target>
+
+	<target name="download.sonar.anttask">
+		<!-- download sonar ant task -->
+		<mkdir dir="${download.dir.sonar}" />
+		<get src="${url.sonar.anttask}" dest="${download.dir.sonar}\sonaranttask.jar" verbose="true" usetimestamp="true" />
+	</target>
+
+	<target name="download.sonar.ldap">
+		<!-- download sonar ant ldap -->
+		<mkdir dir="${download.dir.sonar}" />
+		<get src="${url.sonar.ldap}" dest="${download.dir.sonar}\sonar-ldap-plugin.jar" verbose="true" usetimestamp="true" />
+	</target>
+
+	<target name="sonar.install.anttask">
+		<copy file="${download.dir.sonar}/sonaranttask.jar" todir="${install.dir.ant}/lib" />
+	</target>
+
+	<target name="sonar.ldap.install">
+		<copy file="${download.dir.sonar}/sonar-ldap-plugin.jar" todir="${install.dir}/sonar/extensions/plugins" />
+	</target>
+
+	<target name="sonar.ldap.configure">
+		<replace file="${install.dir}/sonar/conf/sonar.properties" token="LDAP_HOST" value="${opendj.host}" />
+		<replace file="${install.dir}/sonar/conf/sonar.properties" token="LDAP_PORT" value="${opendj.port}" />
+		<replace file="${install.dir}/sonar/conf/sonar.properties" token="LDAP_BIND_DN" value="${opendj.bindDN.cn}" />
+		<replace file="${install.dir}/sonar/conf/sonar.properties" token="LDAP_BIND_PASSWORD" value="${opendj.bindDN.password}" />
+		<replace file="${install.dir}/sonar/conf/sonar.properties" token="LDAP_USER_BASE_DN" value="${opendj.users.base.dn},${opendj.base.dn}" />
+		<replace file="${install.dir}/sonar/conf/sonar.properties" token="LDAP_GROUP_BASE_DN" value="${opendj.groups.base.dn},${opendj.base.dn}" />
+	</target>
+
+	<!--
+	Unzip downloaded sonar.zip
+	Move sonar to programs/sonar
+	-->
+	<target name="sonar.install">
+		<!-- prepare temp dir -->
+		<mkdir dir="${install.tmp}" />
+		<mkdir dir="${install.tmp}/sonar" />
+
+		<!-- unzip downloaded tomcat zip to temp dir -->
+		<unzip dest="${install.tmp}/sonar" src="${download.dir.sonar}\sonar.zip" overwrite="false">
+		</unzip>
+
+		<dirset id="sonar.tmp.dir" dir="${install.tmp}/sonar" includes="sonar-*" />
+		<pathconvert refid="sonar.tmp.dir" property="sonar.tmp.dir.debug" />
+		<echo message="${sonar.tmp.dir.debug}" />
+
+		<!-- http://ant.apache.org/manual/Tasks/move.html -->
+		<mkdir dir="${install.dir}/sonar" />
+		<move todir="${install.dir}/sonar">
+			<fileset dir="${sonar.tmp.dir.debug}" />
+		</move>
+		<delete dir="${install.tmp}" />
+	</target>
+
+
+	<!--
+	Set the config file
+	Make sonar WAR file
+	copy WAR file to tomcat
+	-->
+	<target name="sonar.configure">
+		<!--
+		Deploy sonar on JEE server: home directory cannot be changed! 
+		http://docs.codehaus.org/display/SONAR/Deploying+Sonar+on+JEE+Server
+		-->
+		<echo message="Coping sonar.properties file" />
+		<copy todir="${install.dir}/sonar/conf" file="conf/sonar/sonar.properties">
+		</copy>
+		<!-- configure sonar for mysql -->
+		<replace file="${install.dir}/sonar/conf/sonar.properties" token="MYSQL_PORT" value="${mysql.port}" />
+		<antcall target="sonar.ldap.configure">
+		</antcall>
+		<echo message="${basedir}\${install.dir}\sonar\war" />
+		<ant antfile="${basedir}\${install.dir}\sonar\war\build.xml" dir="${basedir}\${install.dir}\sonar\war" />
+		<move file="${install.dir}\sonar\war\sonar.war" todir="${install.dir}\tomcat\webapps">
+		</move>
+
+		<delete dir="${install.tmp}" />
+	</target>
+
+	<!--
+	MySQL configuration:
+	- create the sonar DB (aka schema)
+	- create the sonar user and set the permissions
+	-->
+	<target name="sonar.create.dbschema">
+		<retry retrycount="2">
+			<sequential>
+				<echo>Wait for mysql to start: (${mysql.startup.delay} seconds)</echo>
+				<sleep seconds="${mysql.startup.delay}" />
+				<createSchema schema="sonar" user="${sonar.user}" password="${sonar.user.pw}" />
+			</sequential>
+		</retry>
+	</target>
+
+
+
+
+	<macrodef name="sqlScript">
+		<attribute name="user" default="${mysql.root}" />
+		<attribute name="password" default="${mysql.root.pw}" />
+		<attribute name="schema" default="" />
+		<attribute name="show" default="true" />
+
+		<element name="sqlResources" implicit="yes" />
+		<sequential>
+			<sql driver="com.mysql.jdbc.Driver" classpathref="mysql.driver.classpath" print="true" onerror="stop" url="jdbc:mysql://localhost:${mysql.port}/" userid="@{user}" password="@{password}" showtrailers="false">
+
+				<sqlResources />
+			</sql>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="createSchema">
+		<attribute name="user" />
+		<attribute name="password" />
+		<attribute name="schema" />
+		<attribute name="options" default="CHARACTER SET utf8" />
+		<sequential>
+			<sqlScript schema="sonar" show="false">
+				<string>
+                    CREATE DATABASE IF NOT EXISTS @{schema} @{options};
+                    GRANT ALL PRIVILEGES ON @{schema}.* to '@{user}'@@'localhost' IDENTIFIED BY '@{password}';
+                    GRANT ALL PRIVILEGES ON @{schema}.* to '@{user}'@@'%'         IDENTIFIED BY '@{password}';
+                    FLUSH PRIVILEGES;
+                    SHOW DATABASES;
+                </string>
+			</sqlScript>
+		</sequential>
+	</macrodef>
+
+
+	<target name="mysql.start">
+		<exec executable="${basedir}\programs\mysql\bin\mysqld.exe" osfamily="windows" spawn="true">
+		</exec>
+	</target>
+
+	<target name="mysql.stop">
+		<exec executable="${basedir}\programs\mysql\bin\mysqladmin.exe" osfamily="windows" spawn="false">
+			<arg value="-u" />
+			<arg value="root" />
+			<arg value="-p${mysql.root.pw}" />
+			<arg value="shutdown" />
+		</exec>
+	</target>
+
+
+
+	<!--
+	Main target. Does all
+	-->
+	<target name="install">
+		<!--<antcall target="download.sonar"></antcall>
+		<antcall target="download.sonar.anttask"></antcall>
+		<antcall target="download.sonar.ldap"></antcall>-->
+		<antcall target="sonar.install.anttask"></antcall>		
+		<antcall target="sonar.install"/>
+		<antcall target="sonar.ldap.install"/>
+		<antcall target="sonar.configure" />
+		<antcall target="mysql.start"/>
+		<antcall target="sonar.create.dbschema"/>		
+		<antcall target="mysql.stop"/>
+	</target>
+
+</project>

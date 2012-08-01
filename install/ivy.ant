@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="install" name="Ivy setup">
+	<property file="project.properties"/>
+	<property file="urls.properties"/>
+	
+	<!--
+	Download ivy zip file
+	-->
+	<target name="download.ivy">
+		<!-- download ivy server -->
+		<mkdir dir="${download.dir.ivy}"/>		
+		<get src="${url.ivy}" dest="${download.dir.ivy}\ivy.zip" 
+		    verbose="true"
+		    usetimestamp="true"/>									
+	</target>
+	
+	
+	<!--
+	Unzip downloaded ivy.zip
+	Move ivy to programs/ant/lib
+	-->
+	<target name="ivy.install">		
+		<mkdir dir="${install.tmp}"/>
+		<mkdir dir="${install.tmp}/ivy"/>
+		<unzip dest="${install.tmp}/ivy" src="${download.dir.ivy}\ivy.zip" overwrite="false"></unzip>
+		<dirset id="ivy.tmp.dir" dir="${install.tmp}/ivy" includes="apache-ivy-*"/>
+		<pathconvert refid="ivy.tmp.dir" property="ivy.tmp.dir.debug" />
+		<echo message="${ivy.tmp.dir.debug}"/>
+		<move todir="${install.dir.ant}/lib">
+		    <fileset dir="${ivy.tmp.dir.debug}">
+				<include name="**/ivy-*.jar"/>
+		    </fileset>
+		</move>	
+		<echo message="Deleting tmp dir: ${install.tmp}"/>
+		<delete dir="${install.tmp}"/>
+	</target>
+
+	<target name="ivy.repository">
+		<mkdir dir="${install.dir}/ivy"/>
+	</target>
+	<!--
+	Main target. Does all
+	-->
+	<target name="install">
+		<!-- <antcall target="download.ivy"></antcall> -->
+		<antcall target="ivy.install"></antcall>
+		<antcall target="ivy.repository"></antcall>
+	</target>
+
+</project>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="install" name="Apache Tomcat setup">
+
+	<property file="project.properties"/>
+	<property file="urls.properties"/>
+
+	<target name="download.tomcat">
+		<!-- download Apache tomcat server -->
+		<mkdir dir="${download.dir.tomcat}"/>		
+		<get src="${url.tomcat}" dest="${download.dir.tomcat}\tomcat.zip" 
+		    verbose="true"
+		    usetimestamp="true"/>					
+	</target>
+	
+	<target name="tomcat.install">
+		<!-- prepare temp dir -->
+		<mkdir dir="${install.tmp}"/>
+		<mkdir dir="${install.tmp}/tomcat"/>
+		
+		<!-- unzip downloaded tomcat zip to temp dir -->
+		<unzip dest="${install.tmp}/tomcat" src="${download.dir.tomcat}\tomcat.zip" overwrite="false"></unzip>
+		
+		<dirset id="tomcat.tmp.dir" dir="${install.tmp}/tomcat" includes="apache-tomcat*"/>
+		<pathconvert refid="tomcat.tmp.dir" property="tomcat.tmp.dir.debug" />
+		<echo message="${tomcat.tmp.dir.debug}"/>
+		
+		<!-- http://ant.apache.org/manual/Tasks/move.html -->
+		<mkdir dir="${install.dir}/tomcat"/>		
+		<move todir="${install.dir}/tomcat">
+		    <fileset dir="${tomcat.tmp.dir.debug}"/>
+		</move>
+		<delete dir="${install.tmp}"/>
+	</target>
+
+	<target name="tomcat.configure">
+		<echo message="Adding mysql libaries to tomcat"/>
+		<path id="mysql.driver.classpath" >
+	        <fileset dir="${install.dir}/mysqlconnector">
+	            <include name="**/mysql-connector-java*.jar"/>
+	        </fileset>
+	    </path>
+		<pathconvert refid="mysql.driver.classpath" property="mysql.driver" />
+		<echo message="${mysql.driver}"/>
+		<copy todir="${install.dir}/tomcat/lib" file="${mysql.driver}"></copy>
+		
+		<echo message="Setting up the ports tomcat will use"/>
+		<copy file="conf/tomcat/server.xml" tofile="${install.dir}/tomcat/${tomcat.conf.server.file}" overwrite="true"></copy>						
+		<replace file="${install.dir}/tomcat/${tomcat.conf.server.file}" token="TOMCAT_PORT_HTTP" value="${tomcat.port.http}"/>
+		<replace file="${install.dir}/tomcat/${tomcat.conf.server.file}" token="TOMCAT_PORT_SSL_HTTP" value="${tomcat.port.https}"/>
+		<replace file="${install.dir}/tomcat/${tomcat.conf.server.file}" token="TOMCAT_PORT_AJP" value="${tomcat.port.ajp}"/>
+		<replace file="${install.dir}/tomcat/${tomcat.conf.server.file}" token="TOMCAT_PORT_SHUTDOWN" value="${tomcat.port.shutdown}"/>
+		
+		<!-- perm size and heap size for running all the applications -->
+		<copy file="conf/tomcat/catalina.bat" tofile="${install.dir}/tomcat/bin/catalina.bat" overwrite="true"></copy>
+		<!--
+		Set the SCM Manager home to programs/scm 
+		https://bitbucket.org/sdorra/scm-manager/wiki/faq
+		-->
+		<replace file="${install.dir}/tomcat/bin/catalina.bat" token="SCM_HOME" value="${basedir}/${install.dir.scm}"/>
+	</target>
+
+	<target name="install">
+		<!-- <antcall target="download.tomcat"></antcall> -->
+		<antcall target="tomcat.install"></antcall>
+		<antcall target="tomcat.configure"/>
+	</target>
+
+</project>

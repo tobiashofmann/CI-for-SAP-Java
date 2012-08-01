@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="install" name="JMeter setup">
+	<property file="project.properties"/>
+	<property file="urls.properties"/>
+
+
+	
+	<!--
+	Download jemter zip file
+	-->
+	<target name="download.jmeter">
+		<!-- download jmeter -->
+		<mkdir dir="${download.dir.jmeter}"/>
+		
+		<get src="${url.jmeter}" dest="${download.dir.jmeter}/jmeter.zip" 
+		    verbose="true"
+		    usetimestamp="true"/>			
+		<get src="${url.jmeter.ant}" dest="${download.dir.jmeter}/ant-jmeter.jar" 
+		    verbose="true"
+		    usetimestamp="true"/>
+		<get src="${url.jmeter.plugins}" dest="${download.dir.jmeter}/jmeter-plugins.zip" 
+		    verbose="true"
+		    usetimestamp="true"/>	
+	</target>
+	
+	
+	<!--
+	Unzip downloaded jmeter.zip
+	Move jmeter to programs/jmeter
+	-->
+	<target name="jmeter.install">		
+		<mkdir dir="${install.tmp}"/>
+		<mkdir dir="${install.tmp}/jmeter"/>
+		<unzip dest="${install.tmp}/jmeter" src="${download.dir.jmeter}/jmeter.zip" overwrite="false"></unzip>
+		
+		<dirset id="jmeter.tmp.dir" dir="${install.tmp}/jmeter" includes="apache-jmeter-*"/>
+		<pathconvert refid="jmeter.tmp.dir" property="jmeter.tmp.dir.debug" />
+		<echo message="${jmeter.tmp.dir.debug}"/>
+		<mkdir dir="${install.dir}/jmeter"/>
+		<move todir="${install.dir}/jmeter">
+		    <fileset dir="${jmeter.tmp.dir.debug}"/>
+		</move>	
+		<echo message="Deleting tmp dir: ${install.tmp}"/>
+		<delete dir="${install.tmp}"/>
+	</target>
+
+	<target name="jmeter.install.anttask">
+		<copy file="${download.dir.jmeter}/ant-jmeter.jar" todir="${install.dir.ant}/lib"/>
+	</target>
+	
+	<target name="jmeter.install.plugins">		
+		<mkdir dir="${install.tmp}"/>
+		<mkdir dir="${install.tmp}/jmeter"/>
+		<unzip dest="${install.tmp}/jmeter" src="${download.dir.jmeter}/jmeter-plugins.zip" overwrite="false"></unzip>
+		<move todir="${install.dir}/ant/extras">
+		    <fileset dir="${install.tmp}/jmeter">
+		    	<include name="*.jar"/>
+		    	<include name="*.bat"/>
+	    	</fileset>
+		</move>	
+		<echo message="Deleting tmp dir: ${install.tmp}"/>
+		<delete dir="${install.tmp}"/>
+	</target>
+	
+	<!--
+	Main target. Does all
+	-->
+	<target name="install">
+		<!-- <antcall target="download.jmeter"></antcall> -->
+		<antcall target="jmeter.install"></antcall>
+		<antcall target="jmeter.install.anttask"></antcall>
+	</target>
+
+</project>

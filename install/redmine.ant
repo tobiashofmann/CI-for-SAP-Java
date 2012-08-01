@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="install" name="Redmine_setup">
+	<property file="project.properties" />
+	<property file="urls.properties" />
+
+	<path id="mysql.driver.classpath">
+		<fileset dir="${install.dir}/mysqlconnector">
+			<include name="**/mysql-connector-java*.jar" />
+		</fileset>
+	</path>
+
+
+	<!--
+	Download redmine zip file
+	-->
+	<target name="download.redmine">
+		<!-- download redmine -->
+		<mkdir dir="${download.dir.redmine}" />
+		<get src="${url.redmine}" dest="${download.dir.redmine}\redmine.zip" verbose="true" usetimestamp="true" />
+	</target>
+
+
+	<!--
+	Move redmine to programs/redmine
+	-->
+	<target name="redmine.install">
+		<!-- prepare temp dir -->
+		<mkdir dir="${install.tmp}" />
+		<mkdir dir="${install.tmp}/redmine" />
+		<!-- unzip downloaded redmine zip to temp dir -->
+		<unzip dest="${install.tmp}/redmine" src="${download.dir.redmine}\redmine.zip" overwrite="false">
+		</unzip>
+
+		<dirset id="redmine.tmp.dir" dir="${install.tmp}/redmine" includes="redmine-*" />
+		<pathconvert refid="redmine.tmp.dir" property="redmine.tmp.dir.debug" />
+		<echo message="${redmine.tmp.dir.debug}" />
+
+		<mkdir dir="${install.dir}/redmine" />
+		<move todir="${install.dir}/redmine">
+			<fileset dir="${redmine.tmp.dir.debug}" />
+		</move>
+		<delete dir="${install.tmp}" />
+
+	</target>
+
+	<target name="redmine.configure">
+		<!--
+		4. Copy config/database.yml.example to config/database.yml and edit this file in order to configure your database settings for "production" environment.
+		Example for a MySQL database using ruby1.8 or jruby:
+		If your server is not running on the standard port (3306), use this configuration instead:
+
+		production:
+		  adapter: mysql
+		  database: redmine
+		  host: localhost
+		  port: 3307
+		  username: redmine
+		  password: my_password
+		-->
+		<copy file="conf/redmine/database.yml" todir="${install.dir}/redmine/config">
+		</copy>
+		<replace file="${install.dir}/redmine/config/database.yml" token="REDMINE_DB_NAME" value="${redmine.db}" />
+		<replace file="${install.dir}/redmine/config/database.yml" token="DB_PORT" value="${mysql.port}" />
+		<replace file="${install.dir}/redmine/config/database.yml" token="DB_HOST" value="${mysql.host}" />
+		<replace file="${install.dir}/redmine/config/database.yml" token="REDMINE_DB_USER" value="${redmine.user}" />
+		<replace file="${install.dir}/redmine/config/database.yml" token="REDMINE_DB_PW" value="${redmine.user.pw}" />
+
+
+		<!--
+		http://www.redmine.org/projects/redmine/wiki/RedmineInstall
+		Then you can install all the gems required by Redmine using the following command:
+			bundle install without development test rmagick postgresql sqlite
+			
+			<env key="HTTP_PROXY" value="http://${proxy.user}:${proxy.pass}@${proxy.host}:${proxy.port}"/>
+		-->
+		
+		<echo message="installing gems" />
+
+		<pathconvert property="list">
+			<path>
+				<fileset dir="${download.dir.jruby}">
+					<include name="**/*.gem" />
+				</fileset>
+			</path>
+			<mapper>
+				<flattenmapper />
+			</mapper>
+		</pathconvert>
+		<script language="javascript">
+			<![CDATA[
+			    var list = Redmine_setup.getProperty("list");
+		     	Redmine_setup.setProperty("gems", list.replace(";"," "));
+		 	]]>
+		</script>
+		<echo>${gems}</echo>
+		<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe" dir="${download.dir.jruby}">
+			<arg value="-S" />
+			<arg value="gem" />
+			<arg value="install" />
+			<arg value="-f" />
+			<arg value="--local" />
+			<arg line="${gems}" />
+		</exec>
+
+		<copy file="conf/redmine/Gemfile" todir="${install.dir}/redmine" />
+		
+
+		<!-- rake generate_secret_token -->
+		<echo message="redmine: generate_secret_token" />
+		<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe" dir="${install.dir}\redmine">
+			<arg value="-S" />
+			<arg value="rake" />
+			<arg value="generate_secret_token" />
+		</exec>
+
+		<!--
+		set RAILS_ENV=production
+		rake db:migrate
+		rake redmine:load_default_data
+		-->
+		<echo message="redmine: db:migrate" />
+		<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe" dir="${install.dir}\redmine">
+			<env key="RAILS_ENV" value="production" />
+			<arg value="-S" />
+			<arg value="rake" />
+			<arg value="db:migrate" />
+		</exec>
+		<echo message="redmine: load_default_data" />
+		<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe" dir="${install.dir}\redmine">
+			<env key="RAILS_ENV" value="production" />
+			<arg value="-S" />
+			<arg value="rake" />
+			<arg value="redmine:load_default_data" />
+			<arg value="REDMINE_LANG=en" />
+		</exec>
+	</target>
+
+
+	<!-- 
+	configure Redmine to use LDAP as authentication provider 
+	-->
+	<target name="redmine.configure.ldap">
+		<echo message="${opendj.host}" />
+		<!-- http://www.redmine.org/projects/redmine/wiki/RedmineLDAP -->
+		<retry retrycount="2">
+			<sequential>
+				<sql driver="com.mysql.jdbc.Driver" classpathref="mysql.driver.classpath" print="true" onerror="stop" url="jdbc:mysql://${mysql.host}:${mysql.port}/${redmine.db}" userid="${redmine.user}" password="${redmine.user.pw}">
+					<string>
+                    	insert into auth_sources (id, type, name, host, port, account, account_password, base_dn, attr_login, attr_firstname, attr_lastname, attr_mail, onthefly_register, tls) 
+                    	values 
+                    	(2, 'AuthSourceLdap', 'OpenDJ', '${opendj.host}', ${opendj.port}, '${opendj.bindDN.cn}', '${opendj.bindDN.password}', 
+                    	'${opendj.base.dn}', 'uid', 'givenName', 'sn', 'mail', 1, 0)
+                    </string>
+				</sql>
+			</sequential>
+		</retry>
+	</target>
+
+	<!--
+	MySQL configuration:
+	- create the sonar DB (aka schema)
+	- create the sonar user and set the permissions
+	-->
+	<target name="redmine.create.dbschema">
+		<retry retrycount="2">
+			<sequential>
+				<echo>Wait for mysql to start: (${mysql.startup.delay} seconds)</echo>
+				<sleep seconds="${mysql.startup.delay}" />
+				<createSchema schema="redmine" user="${redmine.user}" password="${redmine.user.pw}" />
+			</sequential>
+		</retry>
+	</target>
+
+	<!-- 
+	Create Redmine WAR for deploy on tomcat
+	-->
+	<target name="redmine.war.create">
+		<!-- http://www.redmine.org/projects/redmine/wiki/HowTo_install_Redmine_in_Apache_Tomcat -->
+
+		<copy file="conf/redmine/warble.rb" todir="${install.dir}/redmine/config" />
+		
+
+		<echo message="Redmine: create war (warble)" />
+		<!-- create WAR -->
+		<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe" dir="${install.dir}\redmine">
+			<arg value="-S" />
+			<arg value="warble" />
+		</exec>
+	</target>
+
+	<!--
+	Deploy redmine WAR
+	Copies the war file to the tomcat webapp dir for hot deploy
+	-->
+	<target name="redmine.war.deploy">
+		<!-- deploy WAR -->
+		<move file="${install.dir}/redmine/redmine.war" todir="${install.dir}/tomcat/webapps" />
+	</target>
+
+	<!-- start mySQL server -->
+	<target name="mysql.start">
+		<exec executable="${basedir}\programs\mysql\bin\mysqld.exe" osfamily="windows" spawn="true">
+		</exec>
+	</target>
+
+	<!-- stop mySQL server -->
+	<target name="mysql.stop">
+		<exec executable="${basedir}\programs\mysql\bin\mysqladmin.exe" osfamily="windows" spawn="false">
+			<arg value="-u" />
+			<arg value="root" />
+			<arg value="-p${mysql.root.pw}" />
+			<arg value="shutdown" />
+		</exec>
+	</target>
+
+	<macrodef name="sqlScript">
+		<attribute name="user" default="${mysql.root}" />
+		<attribute name="password" default="${mysql.root.pw}" />
+		<attribute name="schema" default="" />
+		<attribute name="show" default="true" />
+
+		<element name="sqlResources" implicit="yes" />
+		<sequential>
+			<sql driver="com.mysql.jdbc.Driver" classpathref="mysql.driver.classpath" print="true" onerror="stop" url="jdbc:mysql://localhost:${mysql.port}/" userid="@{user}" password="@{password}" showtrailers="false">
+				<sqlResources />
+			</sql>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="createSchema">
+		<attribute name="user" />
+		<attribute name="password" />
+		<attribute name="schema" />
+		<attribute name="options" default="CHARACTER SET utf8" />
+		<sequential>
+			<sqlScript schema="${redmine.db}" show="false">
+				<string>
+		                    CREATE DATABASE IF NOT EXISTS @{schema} @{options};
+		                	CREATE USER '@{user}'@@'localhost' IDENTIFIED BY '@{password}';
+		                    GRANT ALL PRIVILEGES ON @{schema}.* to '@{user}'@@'localhost';
+		                    GRANT ALL PRIVILEGES ON @{schema}.* to '@{user}'@@'%';
+		                    FLUSH PRIVILEGES;
+		                    SHOW DATABASES;
+		                </string>
+			</sqlScript>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="installgem">
+		<attribute name="gem.name" />
+		<sequential>
+			<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe" dir="${download.dir.jruby}">
+				<arg value="-S" />
+				<arg value="install" />
+				<arg value="@{gem.name}" />
+			</exec>
+		</sequential>
+	</macrodef>
+	<!--
+	Main target. Does all
+	-->
+	<target name="install">
+		<!-- <antcall target="download.redmine"/> -->
+		<antcall target="redmine.install"/>
+		<antcall target="mysql.start" />
+		<antcall target="redmine.create.dbschema"/>
+		<antcall target="redmine.configure" />
+		<antcall target="redmine.configure.ldap" />
+		<antcall target="mysql.stop" />
+		<antcall target="redmine.war.create" />
+		<antcall target="redmine.war.deploy" />
+	</target>
+
+</project>
+

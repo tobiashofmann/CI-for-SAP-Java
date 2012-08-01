@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="install" name="Solr setup">
+	<property file="project.properties"/>
+	<property file="urls.properties"/>
+
+	
+	<!--
+	Download solr zip file
+	-->
+	<target name="download.solr">
+		<!-- download solr -->
+		<mkdir dir="${download.dir.solr}"/>		
+		<get src="${url.solr}" dest="${download.dir.solr}\solr.zip" 
+		    verbose="true"
+		    usetimestamp="true"/>					
+	</target>
+
+	<!--
+	Unzip downloaded solr.zip
+	Move solr to programs/solr
+	-->
+	<target name="solr.install">
+		<!-- prepare temp dir -->
+		<mkdir dir="${install.tmp}"/>
+		<mkdir dir="${install.tmp}/solr"/>
+		
+		<!-- unzip downloaded solr zip to temp dir -->
+		<unzip dest="${install.tmp}/solr" src="${download.dir.solr}\solr.zip" overwrite="false"></unzip>
+		
+		<dirset id="solr.tmp.dir" dir="${install.tmp}/solr" includes="apache-solr-*"/>
+		<pathconvert refid="solr.tmp.dir" property="solr.tmp.dir.debug" />
+		<echo message="${solr.tmp.dir.debug}"/>
+		<!-- http://ant.apache.org/manual/Tasks/move.html -->
+		<move tofile="${install.dir}/tomcat/webapps/solr.war">
+			 <fileset dir="${solr.tmp.dir.debug}/dist">
+			      <include name="apache-solr-*.war"/>
+			 </fileset>
+		</move>		
+		<mkdir dir="${install.dir}/solr"/>		
+		<move todir="${install.dir}/solr">
+		    <fileset dir="${solr.tmp.dir.debug}"/>
+		</move>
+		<echo message="Deleting tmp dir: ${install.tmp}"/>
+		<delete dir="${install.tmp}"/>		
+	</target>
+
+	<!-- configure solr
+	set the tomcat context so that the solr home is resolved
+	set the data dir in the solr configuration
+	http://wiki.apache.org/solr/SolrTomcat#Single_Solr_Instance
+	-->
+	<target name="solr.configure">
+		<!-- tomcat context -->
+		<copy file="${conf.dir}/solr/solr.xml" todir="${install.dir}/tomcat/conf/Catalina/localhost/"/>
+		<echo message="Setting SOLR_HOME to: ${basedir}/${install.dir.solr}"/>
+		<replace file="${install.dir}/tomcat/conf/Catalina/localhost/solr.xml" token="SOLR_HOME" value="${basedir}\${install.dir.solr}/example/solr"/>
+		<!-- solr data dir -->
+		<mkdir dir="${basedir}\${install.dir.solr}/example/solr/data"/>
+		<copy file="${conf.dir}/solr/solrconfig.xml" todir="${basedir}\${install.dir.solr}/example/solr" overwrite="true"/>
+		<echo message="Setting SOLR_DATA_DIR to: ${basedir}\${install.dir.solr}/example/solr/data"/>
+		<replace file="${basedir}\${install.dir.solr}/example/solr/solrconfig.xml" token="SOLR_DATA_DIR" value="${basedir}\${install.dir.solr}/example/solr/data"/>				
+	</target>
+	
+
+	<!--
+	Main target. Does all
+	-->
+	<target name="install">
+		<!-- <antcall target="download.solr"></antcall> -->
+		<antcall target="solr.install"></antcall>
+		<antcall target="solr.configure"></antcall>
+	</target>
+
+</project>

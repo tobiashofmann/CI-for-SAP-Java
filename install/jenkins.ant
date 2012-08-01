@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="install" name="Jenkins_setup">
+	<property file="project.properties" />
+	<property file="urls.properties" />
+
+	<path id="mysql.driver.classpath">
+		<fileset dir="${install.dir}/mysqlconnector">
+			<include name="**/mysql-connector-java*.jar" />
+		</fileset>
+	</path>
+
+
+	<!--
+	Download jenkins zip file
+	-->
+	<target name="download.jenkins">
+		<!-- download sonar -->
+		<mkdir dir="${download.dir.jenkins}" />
+		<get src="${url.jenkins}" dest="${download.dir.jenkins}\jenkins.war" verbose="true" usetimestamp="true" />
+	</target>
+
+
+	<!--
+	Move sonar to programs/jenkins
+	-->
+	<target name="jenkins.install">
+		<!-- copy downloaded jenkins zip to temp dir -->
+		<copy file="${download.dir.jenkins}\jenkins.war" todir="${install.dir}\tomcat\webapps" />
+	</target>
+
+	<!--
+	configure tomcat so that jenkins uses the correct JENKINS_HOME
+	http://tomcat.apache.org/tomcat-6.0-doc/config/context.html
+	-->
+	<target name="jenkins.configure">
+		<!-- prepare temp dir -->
+		<mkdir dir="${install.dir}" />
+		<mkdir dir="${install.dir}/jenkins" />
+
+		<!-- change tomcat configuration -->
+		<mkdir dir="${install.dir}/tomcat/conf/Catalina" />
+		<mkdir dir="${install.dir}/tomcat/conf/Catalina/localhost" />
+		<copy file="conf/jenkins/jenkins.xml" todir="${install.dir}/tomcat/conf/Catalina/localhost" />
+		<echo message="Setting JENKINS_HOME to: ${basedir}/${install.dir.jenkins}" />
+		<replace file="${install.dir}/tomcat/conf/Catalina/localhost/jenkins.xml" token="JENKINS_HOME_DIR" value="${basedir}\${install.dir.jenkins}" />
+
+		<!-- adjust config xml files -->
+		<!-- main jenkins conf file: config.xml -->
+		<copy file="conf/jenkins/config.xml" todir="${install.dir}/jenkins" />
+		<replace file="${install.dir}/jenkins/config.xml" token="LDAP_HOST" value="${opendj.host}" />
+		<replace file="${install.dir}/jenkins/config.xml" token="LDAP_PORT" value="${opendj.port}" />
+		<replace file="${install.dir}/jenkins/config.xml" token="LDAP_ROOT_DN" value="${opendj.base.dn}" />
+		<replace file="${install.dir}/jenkins/config.xml" token="LDAP_USER_SEARCH_BASE" value="${opendj.users.base.dn}" />
+		<replace file="${install.dir}/jenkins/config.xml" token="LDAP_GROUP_SEARCH_BASE" value="${opendj.groups.base.dn}" />
+		<replace file="${install.dir}/jenkins/config.xml" token="LDAP_MANAGER_DN" value="${opendj.bindDN.cn}" />
+		<replace file="${install.dir}/jenkins/config.xml" token="JAVA_NAME" value="Java6" />
+		<replace file="${install.dir}/jenkins/config.xml" token="JAVA_HOME" value="${java.sdk.home}" />
+		<antcall target="base64"></antcall>
+		<!-- ant conf file: hudson.tasks.Ant.xml -->
+		<copy file="conf/jenkins/hudson.tasks.Ant.xml" todir="${install.dir}/jenkins" />
+		<replace file="${install.dir}/jenkins/hudson.tasks.Ant.xml" token="ANT_NAME" value="Ant18" />
+		<replace file="${install.dir}/jenkins/hudson.tasks.Ant.xml" token="ANT_HOME" value="${basedir}/${install.dir.ant}" />
+		<!-- svn conf file: hudson.scm.SubversionSCM.xml (only copy) -->
+		<copy file="conf/jenkins/hudson.scm.SubversionSCM.xml" todir="${install.dir}/jenkins" />
+	</target>
+
+	<target name="base64">
+		<!-- 
+		Base64 encode / decode
+		http://www.webtoolkit.info/
+		-->
+		<property name="pass" value="${opendj.bindDN.password}"/>
+		<script language="javascript">
+			<![CDATA[
+	     		var Base64 = {	     		 
+	     			_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",	     		 
+			
+	     			encode : function (input) {
+	     				var output = "";
+	     				var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+	     				var i = 0;	     		 
+	     				input = Base64._utf8_encode(input);	     		 
+	     				while (i < input.length) {	     		 
+	     					chr1 = input.charCodeAt(i++);
+	     					chr2 = input.charCodeAt(i++);
+	     					chr3 = input.charCodeAt(i++);	     		 
+	     					enc1 = chr1 >> 2;
+	     					enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+	     					enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+	     					enc4 = chr3 & 63;	     		 
+	     					if (isNaN(chr2)) {
+	     						enc3 = enc4 = 64;
+	     					} else if (isNaN(chr3)) {
+	     						enc4 = 64;
+	     					}
+	     					output = output +
+	     					this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) +
+	     					this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);	     		 
+	     				}	     		 
+	     				return output;
+	     			},			     		 	     		 
+	     			// private method for UTF-8 encoding
+	     			_utf8_encode : function (string) {
+	     				//string = string.replace(/\r\n/g,"\n");
+	     				var utftext = "";	     		 
+	     				for (var n = 0; n < string.length; n++) {	     		 
+	     					var c = string.charCodeAt(n);	     		 
+	     					if (c < 128) {
+	     						utftext += String.fromCharCode(c);
+	     					} else if((c > 127) && (c < 2048)) {
+	     						utftext += String.fromCharCode((c >> 6) | 192);
+	     						utftext += String.fromCharCode((c & 63) | 128);
+	     					} else {
+	     						utftext += String.fromCharCode((c >> 12) | 224);
+	     						utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+	     						utftext += String.fromCharCode((c & 63) | 128);
+	     					}	     		 
+	     				}	     		 
+	     				return utftext;
+	     			}	     		 
+	     		};
+	     		password64 = Base64.encode(pass);     	
+				Jenkins_setup.setProperty("opendj.password64",password64);
+            ]]>
+		</script>
+		<echo message="Jenkins: OpenDJ root password as Base64: ${opendj.password64}" />
+		<replace file="${install.dir}/jenkins/config.xml" token="LDAP_MANANGER_PW" value="${opendj.password64}" />
+	</target>
+
+	<target name="jenkins.modules.download">
+	</target>
+
+	<target name="jenkins.modules.install">
+	</target>
+
+	<!--
+	Main target. Does all
+	-->
+	<target name="install">
+		<!-- <antcall target="download.jenkins"></antcall> -->
+		<antcall target="jenkins.install"></antcall>
+		<antcall target="jenkins.configure" />
+	</target>
+
+</project>

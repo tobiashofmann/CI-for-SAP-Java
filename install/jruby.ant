@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="install" name="JRuby setup">
+	<property file="project.properties" />
+	<property file="urls.properties" />
+
+
+	<!--
+	Download jruby zip file
+	-->
+	<target name="download.jruby">
+		<!-- download jruby -->
+		<mkdir dir="${download.dir.jruby}" />
+		<get src="${url.jruby}" dest="${download.dir.jruby}\jruby.zip" verbose="true" usetimestamp="true" />
+	</target>
+
+
+	<!--
+	Unzip downloaded jruby.zip
+	Move jruby to programs/jruby
+	-->
+	<target name="jruby.install">
+		<!-- prepare temp dir -->
+		<mkdir dir="${install.tmp}" />
+		<mkdir dir="${install.tmp}/jruby" />
+
+		<!-- unzip downloaded tomcat zip to temp dir -->
+		<unzip dest="${install.tmp}/jruby" src="${download.dir.jruby}\jruby.zip" overwrite="false">
+		</unzip>
+
+		<dirset id="jruby.tmp.dir" dir="${install.tmp}/jruby" includes="jruby-*" />
+		<pathconvert refid="jruby.tmp.dir" property="jruby.tmp.dir.debug" />
+		<echo message="${jruby.tmp.dir.debug}" />
+
+		<!-- http://ant.apache.org/manual/Tasks/move.html -->
+		<mkdir dir="${install.dir}/jruby" />
+		<move todir="${install.dir}/jruby" includeemptydirs="true">
+			<fileset dir="${jruby.tmp.dir.debug}" />
+		</move>
+		<delete dir="${install.tmp}" />
+	</target>
+
+
+	<target name="jruby.test">
+		<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe">
+			<arg value="-v" />
+		</exec>
+		<!-- jruby -S gem list \-\-local -->
+		<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe">
+			<arg value="-S" />
+			<arg value="gem" />
+			<arg value="list" />
+			<arg value="--local" />
+		</exec>
+	</target>
+
+
+	<!--
+	http://www.redmine.org/projects/redmine/wiki/RedmineInstall
+	-->
+	<property environment="env" />
+	<target name="jruby.install.rails">
+		<echo message="Variable http_proxy is = ${env.HTTP_PROXY}" />
+		<!-- gem install rails 2.3.5 
+		<env key="HTTP_PROXY" value="http://${proxy.user.jruby}:${proxy.pass}@${proxy.host}:${proxy.port}"/>
+		-->
+		<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe">
+			<arg value="-S" />
+			<arg value="gem" />
+			<arg value="install" />
+			<arg value="rails" />
+			<arg value="--version" />
+			<arg value="2.3.5" />
+		</exec>
+	</target>
+
+
+	<target name="jruby.install.bundle">
+		<!-- gem install bundler 
+		<env key="HTTP_PROXY" value="http://${proxy.user.jruby}:${proxy.pass}@${proxy.host}:${proxy.port}"/>
+		-->
+		<get src="${url.jruby.bundler}" dest="${download.dir.jruby}\bundler.gem" verbose="true" usetimestamp="true" />
+		<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe">
+			<arg value="-S" />
+			<arg value="gem" />
+			<arg value="install" />
+			<arg value="${download.dir.jruby}\bundler.gem" />
+		</exec>
+		<!--
+		<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe">
+			<arg value="-S" />
+			<arg value="gem" />
+			<arg value="install" />
+			<arg value="bundler" />
+		</exec>
+		-->
+	</target>
+
+
+	<!--
+	Main target. Does all
+	-->
+	<target name="install">
+		<!-- <antcall target="download.jruby"></antcall> -->
+		<antcall target="jruby.install">
+		</antcall>
+		<antcall target="jruby.install.rails">
+		</antcall>
+		<antcall target="jruby.install.bundle">
+		</antcall>
+	</target>
+
+</project>

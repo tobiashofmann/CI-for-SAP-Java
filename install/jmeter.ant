@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <project basedir="." default="install" name="JMeter setup">
-	<property file="project.properties"/>
-	<property file="urls.properties"/>
-
-
+	<property file="../conf/project.properties"/>
+	<property file="../conf/urls.properties"/>
 	
 	<!--
 	Download jemter zip file

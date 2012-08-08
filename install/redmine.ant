@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <project basedir="." default="install" name="Redmine_setup">
-	<property file="project.properties" />
-	<property file="urls.properties" />
+	<property file="../conf/project.properties"/>
+	<property file="../conf/urls.properties"/>
 
 	<path id="mysql.driver.classpath">
 		<fileset dir="${install.dir}/mysqlconnector">

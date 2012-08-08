@@ -3,8 +3,8 @@
 <!-- http://www.forgerock.org/opendj.html -->
 	
 <project basedir="." default="install" name="OpenDJ setup">
-	<property file="project.properties"/>
-	<property file="urls.properties"/>
+	<property file="../conf/project.properties"/>
+	<property file="../conf/urls.properties"/>
 	
 	<!--
 	Download opendj zip file

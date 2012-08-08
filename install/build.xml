@@ -2,7 +2,7 @@
 
 <project basedir="." default="install" name="Install SDE">
 	
-	<property file="project.properties"/>
+	<property file="../conf/project.properties"/>
 
 	<property environment="env"/>
 	

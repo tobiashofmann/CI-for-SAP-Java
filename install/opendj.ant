@@ -69,7 +69,7 @@
 		<echo message="OpenDJ running: ${opendj.running}"/>
 		<antcall target="opendj.start"></antcall>
 		
-		<copy file="conf/opendj/user.ldif" todir="${install.tmp}"/>
+		<copy file="${conf.dir}/opendj/user.ldif" todir="${install.tmp}"/>
 		<replace file="${install.tmp}/user.ldif" token="LDAP_BASE_DN" value="${opendj.base.dn}"/>
 		<replace file="${install.tmp}/user.ldif" token="LDAP_USERS_BASE_DN" value="${opendj.users.base.dn}"/>
 		<replace file="${install.tmp}/user.ldif" token="LDAP_GROUPS_BASE_DN" value="${opendj.groups.base.dn}"/>
@@ -80,7 +80,7 @@
 			<arg value="/c"/>
 			<arg value="import-ldif.bat"/>
 			<arg value="--ldifFile"/>
-			<arg value="${basedir}\${install.tmp}\user.ldif"/>
+			<arg value="${basedir}/${install.tmp}/user.ldif"/>
 			<arg value="--backendID"/>
 			<arg value="userRoot"/>
 			<arg value="--append"/>
@@ -100,12 +100,12 @@
 
 	<target name="opendj.start" unless="opendj.running">
 		<echo message="Starting OpenDJ server"/>
-		<exec executable="${basedir}/programs/opendj/bat/start-ds.bat" osfamily="Windows" spawn="true"/>
+		<exec executable="${basedir}/${install.dir.opendj}/bat/start-ds.bat" osfamily="Windows" spawn="true"/>
 	</target>
 		
 	<target name="opendj.stop">
-		<echo message="Starppingting OpenDJ server"/>
-		<exec executable="${basedir}/programs/opendj/bat/stop-ds.bat" osfamily="Windows" spawn="true"/>
+		<echo message="Starting OpenDJ server"/>
+		<exec executable="${basedir}/${install.dir.opendj}/bat/stop-ds.bat" osfamily="Windows" spawn="true"/>
 	</target>
 	
 	<!--

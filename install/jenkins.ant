@@ -41,13 +41,13 @@
 		<!-- change tomcat configuration -->
 		<mkdir dir="${install.dir}/tomcat/conf/Catalina" />
 		<mkdir dir="${install.dir}/tomcat/conf/Catalina/localhost" />
-		<copy file="conf/jenkins/jenkins.xml" todir="${install.dir}/tomcat/conf/Catalina/localhost" />
+		<copy file="${conf.dir}/jenkins/jenkins.xml" todir="${install.dir}/tomcat/conf/Catalina/localhost" />
 		<echo message="Setting JENKINS_HOME to: ${basedir}/${install.dir.jenkins}" />
 		<replace file="${install.dir}/tomcat/conf/Catalina/localhost/jenkins.xml" token="JENKINS_HOME_DIR" value="${basedir}\${install.dir.jenkins}" />
 
 		<!-- adjust config xml files -->
 		<!-- main jenkins conf file: config.xml -->
-		<copy file="conf/jenkins/config.xml" todir="${install.dir}/jenkins" />
+		<copy file="${conf.dir}/jenkins/config.xml" todir="${install.dir}/jenkins" />
 		<replace file="${install.dir}/jenkins/config.xml" token="LDAP_HOST" value="${opendj.host}" />
 		<replace file="${install.dir}/jenkins/config.xml" token="LDAP_PORT" value="${opendj.port}" />
 		<replace file="${install.dir}/jenkins/config.xml" token="LDAP_ROOT_DN" value="${opendj.base.dn}" />
@@ -58,11 +58,11 @@
 		<replace file="${install.dir}/jenkins/config.xml" token="JAVA_HOME" value="${java.sdk.home}" />
 		<antcall target="base64"></antcall>
 		<!-- ant conf file: hudson.tasks.Ant.xml -->
-		<copy file="conf/jenkins/hudson.tasks.Ant.xml" todir="${install.dir}/jenkins" />
+		<copy file="${conf.dir}/jenkins/hudson.tasks.Ant.xml" todir="${install.dir}/jenkins" />
 		<replace file="${install.dir}/jenkins/hudson.tasks.Ant.xml" token="ANT_NAME" value="Ant18" />
 		<replace file="${install.dir}/jenkins/hudson.tasks.Ant.xml" token="ANT_HOME" value="${basedir}/${install.dir.ant}" />
 		<!-- svn conf file: hudson.scm.SubversionSCM.xml (only copy) -->
-		<copy file="conf/jenkins/hudson.scm.SubversionSCM.xml" todir="${install.dir}/jenkins" />
+		<copy file="${conf.dir}/jenkins/hudson.scm.SubversionSCM.xml" todir="${install.dir}/jenkins" />
 	</target>
 
 	<target name="base64">

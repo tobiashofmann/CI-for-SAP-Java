@@ -7,7 +7,7 @@
 	<target name="download.tomcat">
 		<!-- download Apache tomcat server -->
 		<mkdir dir="${download.dir.tomcat}"/>		
-		<get src="${url.tomcat}" dest="${download.dir.tomcat}\tomcat.zip" 
+		<get src="${url.tomcat}" dest="${download.dir.tomcat}/tomcat.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>					
 	</target>
@@ -44,14 +44,14 @@
 		<copy todir="${install.dir}/tomcat/lib" file="${mysql.driver}"></copy>
 		
 		<echo message="Setting up the ports tomcat will use"/>
-		<copy file="conf/tomcat/server.xml" tofile="${install.dir}/tomcat/${tomcat.conf.server.file}" overwrite="true"></copy>						
+		<copy file="${conf.dir}/tomcat/server.xml" tofile="${install.dir}/tomcat/${tomcat.conf.server.file}" overwrite="true"></copy>						
 		<replace file="${install.dir}/tomcat/${tomcat.conf.server.file}" token="TOMCAT_PORT_HTTP" value="${tomcat.port.http}"/>
 		<replace file="${install.dir}/tomcat/${tomcat.conf.server.file}" token="TOMCAT_PORT_SSL_HTTP" value="${tomcat.port.https}"/>
 		<replace file="${install.dir}/tomcat/${tomcat.conf.server.file}" token="TOMCAT_PORT_AJP" value="${tomcat.port.ajp}"/>
 		<replace file="${install.dir}/tomcat/${tomcat.conf.server.file}" token="TOMCAT_PORT_SHUTDOWN" value="${tomcat.port.shutdown}"/>
 		
 		<!-- perm size and heap size for running all the applications -->
-		<copy file="conf/tomcat/catalina.bat" tofile="${install.dir}/tomcat/bin/catalina.bat" overwrite="true"></copy>
+		<copy file="${conf.dir}/tomcat/catalina.bat" tofile="${install.dir}/tomcat/bin/catalina.bat" overwrite="true"></copy>
 		<!--
 		Set the SCM Manager home to programs/scm 
 		https://bitbucket.org/sdorra/scm-manager/wiki/faq

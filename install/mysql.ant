@@ -40,7 +40,7 @@
 	</target>
 	
 	<target name="mysql.configure">
-		<copy file="conf/mysql/my.ini" todir="${install.dir}/mysql"></copy>
+		<copy file="${conf.dir}/mysql/my.ini" todir="${install.dir}/mysql"></copy>
 		
 		<dirset id="mysql.install.dir" dir="${install.dir}/" includes="mysql"/>
 		<pathconvert refid="mysql.install.dir" property="install.dir.mysql" />
@@ -96,12 +96,12 @@
 	
 	
 	<target name="mysql.start">
-		<exec executable="${basedir}\programs\mysql\bin\mysqld.exe" osfamily="windows" spawn="true">
+		<exec executable="${basedir.new}/programs/mysql/bin/mysqld.exe" osfamily="windows" spawn="true">
 		</exec>
 	</target>
 	
 	<target name="mysql.stop">
-		<exec executable="${basedir}\programs\mysql\bin\mysqladmin.exe" osfamily="windows" spawn="false">
+		<exec executable="${basedir.new}/programs/mysql/bin/mysqladmin.exe" osfamily="windows" spawn="false">
 		    <arg value="-u"/>
 		    <arg value="root"/>
 			<arg value="-p${mysql.root.pw}"/>

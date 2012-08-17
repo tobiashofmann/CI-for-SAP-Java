@@ -58,13 +58,13 @@
 		  username: redmine
 		  password: my_password
 		-->
-		<copy file="conf/redmine/database.yml" todir="${install.dir}/redmine/config">
+		<copy file="${conf.dir}/redmine/database.yml" todir="${install.dir}/redmine/config">
 		</copy>
-		<replace file="${install.dir}/redmine/config/database.yml" token="REDMINE_DB_NAME" value="${redmine.db}" />
-		<replace file="${install.dir}/redmine/config/database.yml" token="DB_PORT" value="${mysql.port}" />
-		<replace file="${install.dir}/redmine/config/database.yml" token="DB_HOST" value="${mysql.host}" />
-		<replace file="${install.dir}/redmine/config/database.yml" token="REDMINE_DB_USER" value="${redmine.user}" />
-		<replace file="${install.dir}/redmine/config/database.yml" token="REDMINE_DB_PW" value="${redmine.user.pw}" />
+		<replace file="${install.dir.redmine}/config/database.yml" token="REDMINE_DB_NAME" value="${redmine.db}" />
+		<replace file="${install.dir.redmine}/config/database.yml" token="DB_PORT" value="${mysql.port}" />
+		<replace file="${install.dir.redmine}/config/database.yml" token="DB_HOST" value="${mysql.host}" />
+		<replace file="${install.dir.redmine}/config/database.yml" token="REDMINE_DB_USER" value="${redmine.user}" />
+		<replace file="${install.dir.redmine}/config/database.yml" token="REDMINE_DB_PW" value="${redmine.user.pw}" />
 
 
 		<!--
@@ -94,7 +94,7 @@
 		 	]]>
 		</script>
 		<echo>${gems}</echo>
-		<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe" dir="${download.dir.jruby}">
+		<exec executable="${basedir}/${install.dir.jruby}/bin/jruby.exe" dir="${download.dir.jruby}">
 			<arg value="-S" />
 			<arg value="gem" />
 			<arg value="install" />
@@ -103,12 +103,12 @@
 			<arg line="${gems}" />
 		</exec>
 
-		<copy file="conf/redmine/Gemfile" todir="${install.dir}/redmine" />
+		<copy file="${conf.dir}/redmine/Gemfile" todir="${install.dir}/redmine" />
 		
 
 		<!-- rake generate_secret_token -->
 		<echo message="redmine: generate_secret_token" />
-		<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe" dir="${install.dir}\redmine">
+		<exec executable="${basedir}/${install.dir.jruby}/bin/jruby.exe" dir="${install.dir}/redmine">
 			<arg value="-S" />
 			<arg value="rake" />
 			<arg value="generate_secret_token" />
@@ -120,14 +120,14 @@
 		rake redmine:load_default_data
 		-->
 		<echo message="redmine: db:migrate" />
-		<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe" dir="${install.dir}\redmine">
+		<exec executable="${basedir}/${install.dir.jruby}/bin/jruby.exe" dir="${install.dir}/redmine">
 			<env key="RAILS_ENV" value="production" />
 			<arg value="-S" />
 			<arg value="rake" />
 			<arg value="db:migrate" />
 		</exec>
 		<echo message="redmine: load_default_data" />
-		<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe" dir="${install.dir}\redmine">
+		<exec executable="${basedir}/${install.dir.jruby}/bin/jruby.exe" dir="${install.dir}/redmine">
 			<env key="RAILS_ENV" value="production" />
 			<arg value="-S" />
 			<arg value="rake" />
@@ -178,12 +178,12 @@
 	<target name="redmine.war.create">
 		<!-- http://www.redmine.org/projects/redmine/wiki/HowTo_install_Redmine_in_Apache_Tomcat -->
 
-		<copy file="conf/redmine/warble.rb" todir="${install.dir}/redmine/config" />
+		<copy file="${conf.dir}/redmine/warble.rb" todir="${install.dir}/redmine/config" />
 		
 
 		<echo message="Redmine: create war (warble)" />
 		<!-- create WAR -->
-		<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe" dir="${install.dir}\redmine">
+		<exec executable="${basedir}/${install.dir.jruby}/bin/jruby.exe" dir="${install.dir}\redmine">
 			<arg value="-S" />
 			<arg value="warble" />
 		</exec>
@@ -200,13 +200,13 @@
 
 	<!-- start mySQL server -->
 	<target name="mysql.start">
-		<exec executable="${basedir}\programs\mysql\bin\mysqld.exe" osfamily="windows" spawn="true">
+		<exec executable="${basedir}/${install.dir.mysql}/bin/mysqld.exe" osfamily="windows" spawn="true">
 		</exec>
 	</target>
 
 	<!-- stop mySQL server -->
 	<target name="mysql.stop">
-		<exec executable="${basedir}\programs\mysql\bin\mysqladmin.exe" osfamily="windows" spawn="false">
+		<exec executable="${basedir}/${install.dir.mysql}/bin/mysqladmin.exe" osfamily="windows" spawn="false">
 			<arg value="-u" />
 			<arg value="root" />
 			<arg value="-p${mysql.root.pw}" />

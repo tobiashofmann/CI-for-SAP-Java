@@ -10,7 +10,7 @@
 	<target name="download.testng">
 		<!-- download TestNG -->
 		<mkdir dir="${download.dir.testng}"/>		
-		<get src="${url.testng}" dest="${download.dir.testng}\testng.zip" 
+		<get src="${url.testng}" dest="${download.dir.testng}/testng.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>					
 	</target>
@@ -23,7 +23,7 @@
 	<target name="testng.install">
 		<mkdir dir="${install.tmp}"/>
 		<mkdir dir="${install.tmp}/testng"/>
-		<unzip dest="${install.tmp}/testng" src="${download.dir.testng}\testng.zip" overwrite="false"></unzip>
+		<unzip dest="${install.tmp}/testng" src="${download.dir.testng}/testng.zip" overwrite="false"></unzip>
 		<mkdir dir="${install.dir}/testng"/>
 		<move todir="${install.dir}/testng" flatten="true">
 		    <fileset dir="${install.tmp}/testng">

@@ -64,14 +64,14 @@
 		<!-- gem install rails 2.3.5 
 		<env key="HTTP_PROXY" value="http://${proxy.user.jruby}:${proxy.pass}@${proxy.host}:${proxy.port}"/>
 		-->
-		<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe">
+		<!--
+		<exec executable="${basedir}/${install.dir.jruby}/bin/jruby.exe">
 			<arg value="-S" />
 			<arg value="gem" />
 			<arg value="install" />
-			<arg value="rails" />
-			<arg value="--version" />
-			<arg value="2.3.5" />
+			<arg value="${download.dir.jruby}/rails.gem" />
 		</exec>
+		-->
 	</target>
 
 
@@ -79,21 +79,14 @@
 		<!-- gem install bundler 
 		<env key="HTTP_PROXY" value="http://${proxy.user.jruby}:${proxy.pass}@${proxy.host}:${proxy.port}"/>
 		-->
-		<get src="${url.jruby.bundler}" dest="${download.dir.jruby}\bundler.gem" verbose="true" usetimestamp="true" />
+		<!--<get src="${url.jruby.bundler}" dest="${download.dir.jruby}\bundler.gem" verbose="true" usetimestamp="true" />-->
 		<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe">
 			<arg value="-S" />
 			<arg value="gem" />
 			<arg value="install" />
 			<arg value="${download.dir.jruby}\bundler.gem" />
 		</exec>
-		<!--
-		<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe">
-			<arg value="-S" />
-			<arg value="gem" />
-			<arg value="install" />
-			<arg value="bundler" />
-		</exec>
-		-->
+
 	</target>
 
 

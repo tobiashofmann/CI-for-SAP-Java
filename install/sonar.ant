@@ -86,7 +86,7 @@
 		http://docs.codehaus.org/display/SONAR/Deploying+Sonar+on+JEE+Server
 		-->
 		<echo message="Coping sonar.properties file" />
-		<copy todir="${install.dir}/sonar/conf" file="conf/sonar/sonar.properties">
+		<copy todir="${install.dir}/sonar/conf" file="${conf.dir}/sonar/sonar.properties">
 		</copy>
 		<!-- configure sonar for mysql -->
 		<replace file="${install.dir}/sonar/conf/sonar.properties" token="MYSQL_PORT" value="${mysql.port}" />
@@ -153,12 +153,12 @@
 
 
 	<target name="mysql.start">
-		<exec executable="${basedir}\programs\mysql\bin\mysqld.exe" osfamily="windows" spawn="true">
+		<exec executable="${basedir}/${install.dir.mysql}/bin/mysqld.exe" osfamily="windows" spawn="true">
 		</exec>
 	</target>
 
 	<target name="mysql.stop">
-		<exec executable="${basedir}\programs\mysql\bin\mysqladmin.exe" osfamily="windows" spawn="false">
+		<exec executable="${basedir}/${install.dir.mysql}/bin/mysqladmin.exe" osfamily="windows" spawn="false">
 			<arg value="-u" />
 			<arg value="root" />
 			<arg value="-p${mysql.root.pw}" />

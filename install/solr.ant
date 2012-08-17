@@ -53,12 +53,12 @@
 		<!-- tomcat context -->
 		<copy file="${conf.dir}/solr/solr.xml" todir="${install.dir}/tomcat/conf/Catalina/localhost/"/>
 		<echo message="Setting SOLR_HOME to: ${basedir}/${install.dir.solr}"/>
-		<replace file="${install.dir}/tomcat/conf/Catalina/localhost/solr.xml" token="SOLR_HOME" value="${basedir}\${install.dir.solr}/example/solr"/>
+		<replace file="${install.dir}/tomcat/conf/Catalina/localhost/solr.xml" token="SOLR_HOME" value="${basedir}/${install.dir.solr}/example/solr"/>
 		<!-- solr data dir -->
-		<mkdir dir="${basedir}\${install.dir.solr}/example/solr/data"/>
-		<copy file="${conf.dir}/solr/solrconfig.xml" todir="${basedir}\${install.dir.solr}/example/solr" overwrite="true"/>
-		<echo message="Setting SOLR_DATA_DIR to: ${basedir}\${install.dir.solr}/example/solr/data"/>
-		<replace file="${basedir}\${install.dir.solr}/example/solr/solrconfig.xml" token="SOLR_DATA_DIR" value="${basedir}\${install.dir.solr}/example/solr/data"/>				
+		<mkdir dir="${basedir}/${install.dir.solr}/example/solr/data"/>
+		<copy file="${conf.dir}/solr/solrconfig.xml" todir="${basedir}/${install.dir.solr}/example/solr" overwrite="true"/>
+		<echo message="Setting SOLR_DATA_DIR to: ${basedir}/${install.dir.solr}/example/solr/data"/>
+		<replace file="${basedir}/${install.dir.solr}/example/solr/solrconfig.xml" token="SOLR_DATA_DIR" value="${basedir}/${install.dir.solr}/example/solr/data"/>				
 	</target>
 	
 

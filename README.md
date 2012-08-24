@@ -61,8 +61,12 @@ Default installation:
 Tomcat: http://localhost:9090
 
 Sonar: http://localhost:9090/sonar
+admin / admin
 
 Jenkins: http://localhost:9090/jenkins
+
+Redmine: http://localhost:9090/redmine
+admin / admin
 
 SCM Manager: http://localhost:9090/scm
 User: scmadmin / scmadmin

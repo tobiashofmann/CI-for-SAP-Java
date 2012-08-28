@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<project basedir="." default="install" name="mySQL setup">
-	<property file="../conf/project.properties"/>
-	<property file="../conf/urls.properties"/>
+<project basedir=".." default="install" name="mySQL setup">
+	<property file="conf/project.properties"/>
+	<property file="conf/urls.properties"/>
 	
 	<target name="download.mysql">
 		<!-- download mysql server -->
 		<mkdir dir="${download.dir.mysql}"/>		
-		<get src="${url.mysql.server}" dest="${download.dir.mysql}\mysqldb.zip" 
+		<get src="${url.mysql.server}" dest="${download.dir.mysql}/mysqldb.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>
 		
 		<!-- download mysql connector -->
 		<mkdir dir="${download.dir.mysql.connector}"/>
-		<get src="${url.mysql.connector}" dest="${download.dir.mysql.connector}\mysqlconnector.zip" 
+		<get src="${url.mysql.connector}" dest="${download.dir.mysql.connector}/mysqlconnector.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>				
 	</target>
@@ -24,7 +24,7 @@
 		<mkdir dir="${install.tmp}/mysql"/>
 		
 		<!-- unzip downloaded mysqldb zip to temp dir -->
-		<unzip dest="${install.tmp}/mysql" src="${download.dir.mysql}\mysqldb.zip" overwrite="false"></unzip>
+		<unzip dest="${install.tmp}/mysql" src="${download.dir.mysql}/mysqldb.zip" overwrite="false"></unzip>
 		
 		<!-- http://ant.1045680.n5.nabble.com/DirSet-question-td1353868.html -->
 		<dirset id="mysql.tmp.dir" dir="${install.tmp}/mysql" includes="mysql*"/>
@@ -47,6 +47,7 @@
 				
 		<replace file="${install.dir}/mysql/my.ini" token="MYSQL_PORT" value="${mysql.port}"/>
 		<replace file="${install.dir}/mysql/my.ini" token="MYSQL_DIR" value="${basedir}${file.separator}${install.dir.mysql}"/>
+		<replace file="${install.dir}/mysql/my.ini" token="\" value="\\"/>
 	</target>
 	
 	<target name="mysql.configure.user">
@@ -96,12 +97,12 @@
 	
 	
 	<target name="mysql.start">
-		<exec executable="${basedir.new}/programs/mysql/bin/mysqld.exe" osfamily="windows" spawn="true">
+		<exec executable="${basedir}/${install.dir.mysql}/bin/mysqld.exe" osfamily="windows" spawn="true">
 		</exec>
 	</target>
 	
 	<target name="mysql.stop">
-		<exec executable="${basedir.new}/programs/mysql/bin/mysqladmin.exe" osfamily="windows" spawn="false">
+		<exec executable="${basedir}/${install.dir.mysql}/bin/mysqladmin.exe" osfamily="windows" spawn="false">
 		    <arg value="-u"/>
 		    <arg value="root"/>
 			<arg value="-p${mysql.root.pw}"/>
@@ -112,7 +113,7 @@
 	<target name="mysql.install.connector">
 		<mkdir dir="${install.tmp}"/>
 		<mkdir dir="${install.tmp}/mysqlconnector"/>				
-		<unzip dest="${install.tmp}/mysqlconnector" src="${download.dir.mysql.connector}\mysqlconnector.zip"></unzip>
+		<unzip dest="${install.tmp}/mysqlconnector" src="${download.dir.mysql.connector}/mysqlconnector.zip"></unzip>
 		
 		<mkdir dir="${install.dir}"/>
 		<mkdir dir="${install.dir}/mysqlconnector"/>

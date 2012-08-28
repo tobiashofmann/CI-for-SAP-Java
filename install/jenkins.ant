@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<project basedir="." default="install" name="Jenkins_setup">
-	<property file="../conf/project.properties"/>
-	<property file="../conf/urls.properties"/>
+<project basedir=".." default="install" name="Jenkins_setup">
+	<property file="conf/project.properties"/>
+	<property file="conf/urls.properties"/>
 
 	<path id="mysql.driver.classpath">
 		<fileset dir="${install.dir}/mysqlconnector">
@@ -17,7 +17,7 @@
 	<target name="download.jenkins">
 		<!-- download sonar -->
 		<mkdir dir="${download.dir.jenkins}" />
-		<get src="${url.jenkins}" dest="${download.dir.jenkins}\jenkins.war" verbose="true" usetimestamp="true" />
+		<get src="${url.jenkins}" dest="${download.dir.jenkins}/jenkins.war" verbose="true" usetimestamp="true" />
 	</target>
 
 
@@ -26,7 +26,7 @@
 	-->
 	<target name="jenkins.install">
 		<!-- copy downloaded jenkins zip to temp dir -->
-		<copy file="${download.dir.jenkins}\jenkins.war" todir="${install.dir}\tomcat\webapps" />
+		<copy file="${download.dir.jenkins}/jenkins.war" todir="${install.dir}/tomcat/webapps" />
 	</target>
 
 	<!--

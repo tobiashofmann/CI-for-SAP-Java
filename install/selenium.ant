@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<project basedir="." default="install" name="Selenium setup">
-	<property file="../conf/project.properties"/>
-	<property file="../conf/urls.properties"/>
+<project basedir=".." default="install" name="Selenium setup">
+	<property file="conf/project.properties"/>
+	<property file="conf/urls.properties"/>
 	
 	<!--
 	Download selenium zip file
@@ -10,12 +10,12 @@
 	<target name="download.selenium">
 		<!-- download selenium server -->
 		<mkdir dir="${download.dir.selenium}"/>		
-		<get src="${url.selenium.server}" dest="${download.dir.selenium}\seleniumserver.jar" 
+		<get src="${url.selenium.server}" dest="${download.dir.selenium}/seleniumserver.jar" 
 		    verbose="true"
 		    usetimestamp="true"/>				
 		<!-- download selenium client Java -->
 		<mkdir dir="${download.dir.selenium}"/>		
-		<get src="${url.selenium.client.java}" dest="${download.dir.selenium}\seleniumclientjava.zip" 
+		<get src="${url.selenium.client.java}" dest="${download.dir.selenium}/seleniumclientjava.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>					
 	</target>
@@ -28,7 +28,7 @@
 	<target name="selenium.install.client">		
 		<mkdir dir="${install.tmp}"/>
 		<mkdir dir="${install.tmp}/selenium"/>
-		<unzip dest="${install.tmp}/selenium" src="${download.dir.selenium}\seleniumclientjava.zip" overwrite="false"></unzip>
+		<unzip dest="${install.tmp}/selenium" src="${download.dir.selenium}/seleniumclientjava.zip" overwrite="false"></unzip>
 		<dirset id="selenium.tmp.dir" dir="${install.tmp}/selenium" includes="selenium-*"/>
 		<pathconvert refid="selenium.tmp.dir" property="selenium.tmp.dir.debug" />
 		<echo message="${selenium.tmp.dir.debug}"/>

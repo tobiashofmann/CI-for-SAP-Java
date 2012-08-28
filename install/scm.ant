@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<project basedir="." default="install" name="SCM Manager setup">
-	<property file="../conf/project.properties"/>
-	<property file="../conf/urls.properties"/>
+<project basedir=".." default="install" name="SCM Manager setup">
+	<property file="conf/project.properties"/>
+	<property file="conf/urls.properties"/>
 	
 	<!--
 	Download scm zip file
@@ -10,16 +10,16 @@
 	<target name="download.scm">
 		<!-- download sonar -->
 		<mkdir dir="${download.dir.scm}"/>		
-		<get src="${url.scm}" dest="${download.dir.scm}\scm.war" 
+		<get src="${url.scm}" dest="${download.dir.scm}/scm.war" 
 		    verbose="true"
 		    usetimestamp="true"/>	
-		<get src="${url.scm.ldap}" dest="${download.dir.scm}\scm-auth-ldap.jar" 
+		<get src="${url.scm.ldap}" dest="${download.dir.scm}/scm-auth-ldap.jar" 
 		    verbose="true"
 		    usetimestamp="true"/>	
-		<get src="${url.scm.jenkins}" dest="${download.dir.scm}\scm-jenkins.jar" 
+		<get src="${url.scm.jenkins}" dest="${download.dir.scm}/scm-jenkins.jar" 
 		    verbose="true"
 		    usetimestamp="true"/>
-		<get src="${url.scm.client}" dest="${download.dir.scm}\scm-client.jar" 
+		<get src="${url.scm.client}" dest="${download.dir.scm}/scm-client.jar" 
 		    verbose="true"
 		    usetimestamp="true"/>	
 	</target>
@@ -30,29 +30,29 @@
 	-->
 	<target name="scm.install">		
 		<!-- deploy SCM -->
-		<copy file="${download.dir.scm}\scm.war" todir="${install.dir}\tomcat\webapps" />
+		<copy file="${download.dir.scm}/scm.war" todir="${install.dir.tomcat}/webapps" />
 		<mkdir dir="${install.dir.scm}"/>
 	</target>
 	
 	<target name="scm.install.plugin.ldap">		
 		<!-- install LDAP plugin SCM -->
-		<copy file="${download.dir.scm}\scm-auth-ldap.jar" todir="${install.dir}\scm\plugins\sonia\scm\plugins\scm-auth-ldap-plugin\1.14" />				
+		<copy file="${download.dir.scm}/scm-auth-ldap.jar" todir="${install.dir.scm}/plugins/sonia/scm\plugins\scm-auth-ldap-plugin\1.14" />				
 	</target>
 
 	<target name="scm.install.plugin.jenkins">		
 		<!-- install Jenkins CI plugin SCM -->
-		<copy file="${download.dir.scm}\scm-jenkins.jar" todir="${install.dir}\scm\plugins\sonia\scm\plugins\scm-jenkins-plugin\1.5" />				
+		<copy file="${download.dir.scm}/scm-jenkins.jar" todir="${install.dir}/scm/plugins/sonia/scm/plugins\scm-jenkins-plugin\1.5" />				
 	</target>
 	
 	<target name="scm.install.client">		
 		<!-- install Java client -->
-		<copy file="${download.dir.scm}\scm-client.jar" todir="${install.dir}\scm" />				
+		<copy file="${download.dir.scm}/scm-client.jar" todir="${install.dir}/scm" />				
 	</target>
 
 	<target name="scm.configure">		
 		<!-- install Jenkins CI plugin SCM -->
-		<copy file="${conf.dir}\scm\classpath.xml" todir="${install.dir}\scm\plugins" />
-		<copy file="${conf.dir}\scm\ldap.xml" todir="${install.dir}\scm\config" overwrite="true" />
+		<copy file="${conf.dir}/scm/classpath.xml" todir="${install.dir}/scm/plugins" />
+		<copy file="${conf.dir}/scm/ldap.xml" todir="${install.dir}/scm/config" overwrite="true" />
 		<replace file="${install.dir}/scm/config/ldap.xml" token="LDAP_HOST" value="${opendj.host}"/>
 		<replace file="${install.dir}/scm/config/ldap.xml" token="LDAP_PORT" value="${opendj.port}"/>
 		<replace file="${install.dir}/scm/config/ldap.xml" token="LDAP_ROOT_DN" value="${opendj.base.dn}"/>

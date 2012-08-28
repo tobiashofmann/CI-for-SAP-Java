@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<project basedir="." default="install" name="Solr setup">
-	<property file="../conf/project.properties"/>
-	<property file="../conf/urls.properties"/>
+<project basedir=".." default="install" name="Solr setup">
+	<property file="conf/project.properties"/>
+	<property file="conf/urls.properties"/>
 	
 	<!--
 	Download solr zip file
@@ -10,7 +10,7 @@
 	<target name="download.solr">
 		<!-- download solr -->
 		<mkdir dir="${download.dir.solr}"/>		
-		<get src="${url.solr}" dest="${download.dir.solr}\solr.zip" 
+		<get src="${url.solr}" dest="${download.dir.solr}/solr.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>					
 	</target>
@@ -25,7 +25,7 @@
 		<mkdir dir="${install.tmp}/solr"/>
 		
 		<!-- unzip downloaded solr zip to temp dir -->
-		<unzip dest="${install.tmp}/solr" src="${download.dir.solr}\solr.zip" overwrite="false"></unzip>
+		<unzip dest="${install.tmp}/solr" src="${download.dir.solr}/solr.zip" overwrite="false"></unzip>
 		
 		<dirset id="solr.tmp.dir" dir="${install.tmp}/solr" includes="apache-solr-*"/>
 		<pathconvert refid="solr.tmp.dir" property="solr.tmp.dir.debug" />

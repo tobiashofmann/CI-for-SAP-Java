@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<project basedir="." default="install" name="Redmine_setup">
-	<property file="../conf/project.properties"/>
-	<property file="../conf/urls.properties"/>
+<project basedir=".." default="install" name="Redmine_setup">
+	<property file="conf/project.properties"/>
+	<property file="conf/urls.properties"/>
 
 	<path id="mysql.driver.classpath">
 		<fileset dir="${install.dir}/mysqlconnector">
@@ -17,7 +17,7 @@
 	<target name="download.redmine">
 		<!-- download redmine -->
 		<mkdir dir="${download.dir.redmine}" />
-		<get src="${url.redmine}" dest="${download.dir.redmine}\redmine.zip" verbose="true" usetimestamp="true" />
+		<get src="${url.redmine}" dest="${download.dir.redmine}/redmine.zip" verbose="true" usetimestamp="true" />
 	</target>
 
 
@@ -29,7 +29,7 @@
 		<mkdir dir="${install.tmp}" />
 		<mkdir dir="${install.tmp}/redmine" />
 		<!-- unzip downloaded redmine zip to temp dir -->
-		<unzip dest="${install.tmp}/redmine" src="${download.dir.redmine}\redmine.zip" overwrite="false">
+		<unzip dest="${install.tmp}/redmine" src="${download.dir.redmine}/redmine.zip" overwrite="false">
 		</unzip>
 
 		<dirset id="redmine.tmp.dir" dir="${install.tmp}/redmine" includes="redmine-*" />
@@ -183,7 +183,7 @@
 
 		<echo message="Redmine: create war (warble)" />
 		<!-- create WAR -->
-		<exec executable="${basedir}/${install.dir.jruby}/bin/jruby.exe" dir="${install.dir}\redmine">
+		<exec executable="${basedir}/${install.dir.jruby}/bin/jruby.exe" dir="${install.dir}/redmine">
 			<arg value="-S" />
 			<arg value="warble" />
 		</exec>
@@ -250,7 +250,7 @@
 	<macrodef name="installgem">
 		<attribute name="gem.name" />
 		<sequential>
-			<exec executable="${basedir}\${install.dir.jruby}\bin\jruby.exe" dir="${download.dir.jruby}">
+			<exec executable="${basedir}/${install.dir.jruby}/bin/jruby.exe" dir="${download.dir.jruby}">
 				<arg value="-S" />
 				<arg value="install" />
 				<arg value="@{gem.name}" />

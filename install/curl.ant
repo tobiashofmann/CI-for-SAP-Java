@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<project basedir="." default="install" name="Curl setup">
-	<property file="../conf/project.properties"/>
-	<property file="../conf/urls.properties"/>
+<project basedir=".." default="install" name="Curl setup">
+	<property file="conf/project.properties"/>
+	<property file="conf/urls.properties"/>
 	
 	<!--
 	Download curl zip file
@@ -10,7 +10,7 @@
 	<target name="download.curl">
 		<!-- download curl -->
 		<mkdir dir="${download.dir.curl}"/>		
-		<get src="${url.curl}" dest="${download.dir.curl}\curl.zip" 
+		<get src="${url.curl}" dest="${download.dir.curl}/curl.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>	
 	
@@ -24,7 +24,7 @@
 	<target name="curl.install">		
 		<mkdir dir="${install.tmp}"/>
 		<mkdir dir="${install.tmp}/curl"/>
-		<unzip dest="${install.tmp}/curl" src="${download.dir.curl}\curl.zip" overwrite="false"></unzip>		
+		<unzip dest="${install.tmp}/curl" src="${download.dir.curl}/curl.zip" overwrite="false"></unzip>		
 		<move todir="${install.dir}/curl" file="${install.tmp}/curl/curl.exe"/>
 		<echo message="Deleting tmp dir: ${install.tmp}"/>
 		<delete dir="${install.tmp}"/>

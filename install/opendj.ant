@@ -2,9 +2,9 @@
 
 <!-- http://www.forgerock.org/opendj.html -->
 	
-<project basedir="." default="install" name="OpenDJ setup">
-	<property file="../conf/project.properties"/>
-	<property file="../conf/urls.properties"/>
+<project basedir=".." default="install" name="OpenDJ setup">
+	<property file="conf/project.properties"/>
+	<property file="conf/urls.properties"/>
 	
 	<!--
 	Download opendj zip file
@@ -12,7 +12,7 @@
 	<target name="download.opendj">
 		<!-- download opendj server -->
 		<mkdir dir="${download.dir.opendj}"/>		
-		<get src="${url.opendj}" dest="${download.dir.opendj}\opendj.zip" 
+		<get src="${url.opendj}" dest="${download.dir.opendj}/opendj.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>									
 	</target>
@@ -26,7 +26,7 @@
 		
 		<mkdir dir="${install.tmp}"/>
 		<mkdir dir="${install.tmp}/opendj"/>
-		<unzip dest="${install.tmp}/opendj" src="${download.dir.opendj}\opendj.zip" overwrite="false"></unzip>
+		<unzip dest="${install.tmp}/opendj" src="${download.dir.opendj}/opendj.zip" overwrite="false"></unzip>
 		<dirset id="opendj.tmp.dir" dir="${install.tmp}/opendj" includes="OpenDJ-*"/>
 		<pathconvert refid="opendj.tmp.dir" property="opendj.tmp.dir.debug" />
 		<echo message="${opendj.tmp.dir.debug}"/>

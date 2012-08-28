@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<project basedir="." default="install" name="Sonar setup">
-	<property file="../conf/project.properties"/>
-	<property file="../conf/urls.properties"/>
+<project basedir=".." default="install" name="Sonar setup">
+	<property file="conf/project.properties"/>
+	<property file="conf/urls.properties"/>
 
 	<path id="mysql.driver.classpath">
 		<fileset dir="${install.dir}/mysqlconnector">
@@ -23,13 +23,13 @@
 	<target name="download.sonar.anttask">
 		<!-- download sonar ant task -->
 		<mkdir dir="${download.dir.sonar}" />
-		<get src="${url.sonar.anttask}" dest="${download.dir.sonar}\sonaranttask.jar" verbose="true" usetimestamp="true" />
+		<get src="${url.sonar.anttask}" dest="${download.dir.sonar}/sonaranttask.jar" verbose="true" usetimestamp="true" />
 	</target>
 
 	<target name="download.sonar.ldap">
 		<!-- download sonar ant ldap -->
 		<mkdir dir="${download.dir.sonar}" />
-		<get src="${url.sonar.ldap}" dest="${download.dir.sonar}\sonar-ldap-plugin.jar" verbose="true" usetimestamp="true" />
+		<get src="${url.sonar.ldap}" dest="${download.dir.sonar}/sonar-ldap-plugin.jar" verbose="true" usetimestamp="true" />
 	</target>
 
 	<target name="sonar.install.anttask">
@@ -41,12 +41,12 @@
 	</target>
 
 	<target name="sonar.ldap.configure">
-		<replace file="${install.dir}/sonar/conf/sonar.properties" token="LDAP_HOST" value="${opendj.host}" />
-		<replace file="${install.dir}/sonar/conf/sonar.properties" token="LDAP_PORT" value="${opendj.port}" />
-		<replace file="${install.dir}/sonar/conf/sonar.properties" token="LDAP_BIND_DN" value="${opendj.bindDN.cn}" />
-		<replace file="${install.dir}/sonar/conf/sonar.properties" token="LDAP_BIND_PASSWORD" value="${opendj.bindDN.password}" />
-		<replace file="${install.dir}/sonar/conf/sonar.properties" token="LDAP_USER_BASE_DN" value="${opendj.users.base.dn},${opendj.base.dn}" />
-		<replace file="${install.dir}/sonar/conf/sonar.properties" token="LDAP_GROUP_BASE_DN" value="${opendj.groups.base.dn},${opendj.base.dn}" />
+		<replace file="${install.dir.sonar}/conf/sonar.properties" token="LDAP_HOST" value="${opendj.host}" />
+		<replace file="${install.dir.sonar}/conf/sonar.properties" token="LDAP_PORT" value="${opendj.port}" />
+		<replace file="${install.dir.sonar}/conf/sonar.properties" token="LDAP_BIND_DN" value="${opendj.bindDN.cn}" />
+		<replace file="${install.dir.sonar}/conf/sonar.properties" token="LDAP_BIND_PASSWORD" value="${opendj.bindDN.password}" />
+		<replace file="${install.dir.sonar}/conf/sonar.properties" token="LDAP_USER_BASE_DN" value="${opendj.users.base.dn},${opendj.base.dn}" />
+		<replace file="${install.dir.sonar}/conf/sonar.properties" token="LDAP_GROUP_BASE_DN" value="${opendj.groups.base.dn},${opendj.base.dn}" />
 	</target>
 
 	<!--
@@ -59,7 +59,7 @@
 		<mkdir dir="${install.tmp}/sonar" />
 
 		<!-- unzip downloaded tomcat zip to temp dir -->
-		<unzip dest="${install.tmp}/sonar" src="${download.dir.sonar}\sonar.zip" overwrite="false">
+		<unzip dest="${install.tmp}/sonar" src="${download.dir.sonar}/sonar.zip" overwrite="false">
 		</unzip>
 
 		<dirset id="sonar.tmp.dir" dir="${install.tmp}/sonar" includes="sonar-*" />
@@ -86,15 +86,15 @@
 		http://docs.codehaus.org/display/SONAR/Deploying+Sonar+on+JEE+Server
 		-->
 		<echo message="Coping sonar.properties file" />
-		<copy todir="${install.dir}/sonar/conf" file="${conf.dir}/sonar/sonar.properties">
+		<copy todir="${install.dir.sonar}/conf" file="${conf.dir}/sonar/sonar.properties">
 		</copy>
 		<!-- configure sonar for mysql -->
-		<replace file="${install.dir}/sonar/conf/sonar.properties" token="MYSQL_PORT" value="${mysql.port}" />
+		<replace file="${install.dir.sonar}/conf/sonar.properties" token="MYSQL_PORT" value="${mysql.port}" />
 		<antcall target="sonar.ldap.configure">
 		</antcall>
-		<echo message="${basedir}\${install.dir}\sonar\war" />
-		<ant antfile="${basedir}\${install.dir}\sonar\war\build.xml" dir="${basedir}\${install.dir}\sonar\war" />
-		<move file="${install.dir}\sonar\war\sonar.war" todir="${install.dir}\tomcat\webapps">
+		<echo message="${basedir}/${install.dir.sonar}/war" />
+		<ant antfile="${basedir}/${install.dir.sonar}/war/build.xml" dir="${basedir}/${install.dir.sonar}/war" />
+		<move file="${install.dir.sonar}/war/sonar.war" todir="${install.dir.tomcat}/webapps">
 		</move>
 
 		<delete dir="${install.tmp}" />

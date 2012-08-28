@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<project basedir="." default="install" name="Apache Tomcat setup">
-	<property file="../conf/project.properties"/>
-	<property file="../conf/urls.properties"/>
+<project basedir=".." default="install" name="Apache Tomcat setup">
+	<property file="conf/project.properties"/>
+	<property file="conf/urls.properties"/>
 
 	<target name="download.tomcat">
 		<!-- download Apache tomcat server -->
@@ -18,7 +18,7 @@
 		<mkdir dir="${install.tmp}/tomcat"/>
 		
 		<!-- unzip downloaded tomcat zip to temp dir -->
-		<unzip dest="${install.tmp}/tomcat" src="${download.dir.tomcat}\tomcat.zip" overwrite="false"></unzip>
+		<unzip dest="${install.tmp}/tomcat" src="${download.dir.tomcat}/tomcat.zip" overwrite="false"></unzip>
 		
 		<dirset id="tomcat.tmp.dir" dir="${install.tmp}/tomcat" includes="apache-tomcat*"/>
 		<pathconvert refid="tomcat.tmp.dir" property="tomcat.tmp.dir.debug" />
@@ -45,18 +45,18 @@
 		
 		<echo message="Setting up the ports tomcat will use"/>
 		<copy file="${conf.dir}/tomcat/server.xml" tofile="${install.dir}/tomcat/${tomcat.conf.server.file}" overwrite="true"></copy>						
-		<replace file="${install.dir}/tomcat/${tomcat.conf.server.file}" token="TOMCAT_PORT_HTTP" value="${tomcat.port.http}"/>
-		<replace file="${install.dir}/tomcat/${tomcat.conf.server.file}" token="TOMCAT_PORT_SSL_HTTP" value="${tomcat.port.https}"/>
-		<replace file="${install.dir}/tomcat/${tomcat.conf.server.file}" token="TOMCAT_PORT_AJP" value="${tomcat.port.ajp}"/>
-		<replace file="${install.dir}/tomcat/${tomcat.conf.server.file}" token="TOMCAT_PORT_SHUTDOWN" value="${tomcat.port.shutdown}"/>
+		<replace file="${install.dir.tomcat}/${tomcat.conf.server.file}" token="TOMCAT_PORT_HTTP" value="${tomcat.port.http}"/>
+		<replace file="${install.dir.tomcat}/${tomcat.conf.server.file}" token="TOMCAT_PORT_SSL_HTTP" value="${tomcat.port.https}"/>
+		<replace file="${install.dir.tomcat}/${tomcat.conf.server.file}" token="TOMCAT_PORT_AJP" value="${tomcat.port.ajp}"/>
+		<replace file="${install.dir.tomcat}/${tomcat.conf.server.file}" token="TOMCAT_PORT_SHUTDOWN" value="${tomcat.port.shutdown}"/>
 		
 		<!-- perm size and heap size for running all the applications -->
-		<copy file="${conf.dir}/tomcat/catalina.bat" tofile="${install.dir}/tomcat/bin/catalina.bat" overwrite="true"></copy>
+		<copy file="${conf.dir}/tomcat/catalina.bat" tofile="${install.dir.tomcat}/bin/catalina.bat" overwrite="true"></copy>
 		<!--
 		Set the SCM Manager home to programs/scm 
 		https://bitbucket.org/sdorra/scm-manager/wiki/faq
 		-->
-		<replace file="${install.dir}/tomcat/bin/catalina.bat" token="SCM_HOME" value="${basedir}/${install.dir.scm}"/>
+		<replace file="${install.dir.tomcat}/bin/catalina.bat" token="SCM_HOME" value="${basedir}/${install.dir.scm}"/>
 	</target>
 
 	<target name="install">

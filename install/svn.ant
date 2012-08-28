@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<project basedir="." default="install" name="Svn setup">
-	<property file="../conf/project.properties"/>
-	<property file="../conf/urls.properties"/>
+<project basedir=".." default="install" name="Svn setup">
+	<property file="conf/project.properties"/>
+	<property file="conf/urls.properties"/>
 	
 	<!--
 	Download svn zip file
@@ -10,7 +10,7 @@
 	<target name="download.svn">
 		<!-- download svn -->
 		<mkdir dir="${download.dir.svn}"/>		
-		<get src="${url.svn}" dest="${download.dir.svn}\svn.zip" 
+		<get src="${url.svn}" dest="${download.dir.svn}/svn.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>					
 	</target>
@@ -23,7 +23,7 @@
 	<target name="svn.install">		
 		<mkdir dir="${install.tmp}"/>
 		<mkdir dir="${install.tmp}/svn"/>
-		<unzip dest="${install.tmp}/svn" src="${download.dir.svn}\svn.zip" overwrite="false"></unzip>
+		<unzip dest="${install.tmp}/svn" src="${download.dir.svn}/svn.zip" overwrite="false"></unzip>
 		<dirset id="svn.tmp.dir" dir="${install.tmp}/svn" includes="svnkit-*"/>
 		<pathconvert refid="svn.tmp.dir" property="svn.tmp.dir.debug" />
 		<echo message="${svn.tmp.dir.debug}"/>

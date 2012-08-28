@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="download" name="download">
-	<property file="../conf/project.properties"/>
-	<property file="../conf/urls.properties"/>
+<project basedir=".." default="download" name="download">
+	<property file="conf/project.properties"/>
+	<property file="conf/urls.properties"/>
 
 	<!--
 		Download ivy zip file
@@ -10,7 +10,7 @@
 		<echo message="${basedir}"/>
 		<!-- download ivy server -->
 		<mkdir dir="${download.dir.ivy}" />
-		<get src="${url.ivy}" dest="${download.dir.ivy}\ivy.zip" verbose="true" usetimestamp="true" />
+		<get src="${url.ivy}" dest="${download.dir.ivy}/ivy.zip" verbose="true" usetimestamp="true" />
 	</target>
 	
 	
@@ -20,7 +20,7 @@
 	<target name="download.ant">
 		<!-- download sonar -->
 		<mkdir dir="${download.dir.ant}"/>		
-		<get src="${url.ant}" dest="${download.dir.ant}\ant.zip" 
+		<get src="${url.ant}" dest="${download.dir.ant}/ant.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>					
 	</target>
@@ -32,7 +32,7 @@
 	<target name="download.curl">
 		<!-- download curl -->
 		<mkdir dir="${download.dir.curl}"/>		
-		<get src="${url.curl}" dest="${download.dir.curl}\curl.zip" 
+		<get src="${url.curl}" dest="${download.dir.curl}/curl.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>		
 	</target>
@@ -43,7 +43,7 @@
 	<target name="download.jenkins">
 		<!-- download sonar -->
 		<mkdir dir="${download.dir.jenkins}"/>		
-		<get src="${url.jenkins}" dest="${download.dir.jenkins}\jenkins.war" 
+		<get src="${url.jenkins}" dest="${download.dir.jenkins}/jenkins.war" 
 		    verbose="true"
 		    usetimestamp="true"/>					
 	</target>
@@ -72,7 +72,7 @@
 	<target name="download.jruby">
 		<!-- download jruby -->
 		<mkdir dir="${download.dir.jruby}" />
-		<get src="${url.jruby}" dest="${download.dir.jruby}\jruby.zip" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby}" dest="${download.dir.jruby}/jruby.zip" verbose="true" usetimestamp="true" />
 	</target>
 	
 	<!--
@@ -82,68 +82,68 @@
 		
 		<echo message="downloading gems" />
 	
-		<get src="${url.jruby.tzinfo}" dest="${download.dir.jruby}\tzinfo.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.treetop}" dest="${download.dir.jruby}\treetop.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.tilt}" dest="${download.dir.jruby}\tilt.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.thor}" dest="${download.dir.jruby}\thor.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.sprockets}" dest="${download.dir.jruby}\sprockets.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.sources}" dest="${download.dir.jruby}\sources.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.ruby-openid}" dest="${download.dir.jruby}\ruby-openid.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.rdoc}" dest="${download.dir.jruby}\rdoc.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.railties}" dest="${download.dir.jruby}\railties.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.rack}" dest="${download.dir.jruby}\rack.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.rack-test}" dest="${download.dir.jruby}\rack-test.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.rack-ssl}" dest="${download.dir.jruby}\rack-ssl.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.rack-openid}" dest="${download.dir.jruby}\rack-openid.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.rack-cache}" dest="${download.dir.jruby}\rack-cache.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.prototype-rails}" dest="${download.dir.jruby}\prototype-rails.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.polyglot}" dest="${download.dir.jruby}\polyglot.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.net-ldap}" dest="${download.dir.jruby}\net-ldap.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.multi_json}" dest="${download.dir.jruby}\multi_json.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.mime-types}" dest="${download.dir.jruby}\mime-types.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.mail}" dest="${download.dir.jruby}\mail.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.json}" dest="${download.dir.jruby}\json-java.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.jruby-openssl}" dest="${download.dir.jruby}\jruby-openssl.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.bundler}" dest="${download.dir.jruby}\bundler.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.jruby-jars}" dest="${download.dir.jruby}\jruby-jars.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.rubyzip}" dest="${download.dir.jruby}\rubyzip.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.journey}" dest="${download.dir.jruby}\journey.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.jdbc-mysql}" dest="${download.dir.jruby}\jdbc-mysql.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.i18n}" dest="${download.dir.jruby}\i18n.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.hike}" dest="${download.dir.jruby}\hike.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.fastercsv}" dest="${download.dir.jruby}\fastercsv.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.erubis}" dest="${download.dir.jruby}\erubis.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.coderay}" dest="${download.dir.jruby}\coderay.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.builder}" dest="${download.dir.jruby}\builder.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.bouncy-castle-java}" dest="${download.dir.jruby}\bouncy-castle-java.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.arel}" dest="${download.dir.jruby}\arel.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.activeresource}" dest="${download.dir.jruby}\activeresource.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.activerecord-jdbcmysql-adapter}" dest="${download.dir.jruby}\activerecord-jdbcmysql-adapter.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.activerecord-jdbc-adapter}" dest="${download.dir.jruby}\activerecord-jdbc-adapter.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.activemodel}" dest="${download.dir.jruby}\activemodel.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.activesupport}" dest="${download.dir.jruby}\activesupport.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.actionmailer}" dest="${download.dir.jruby}\actionmailer.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.activerecord}" dest="${download.dir.jruby}\activerecord.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.actionpack}" dest="${download.dir.jruby}\actionpack.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.rails}" dest="${download.dir.jruby}\rails.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.jruby-rack}" dest="${download.dir.jruby}\jruby-rack.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.warbler}" dest="${download.dir.jruby}\warbler.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.activerecord-jdbcpostgresql-adapter}" dest="${download.dir.jruby}\activerecord-jdbcpostgresql-adapter.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.activerecord-jdbcsqlite3-adapter}" dest="${download.dir.jruby}\activerecord-dbcsqlite3-adapter.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.jdbc-postgres}" dest="${download.dir.jruby}\jdbc-postgres.gem" verbose="true" usetimestamp="true" />
-		<get src="${url.jruby.jdbc-sqlite3}" dest="${download.dir.jruby}\jdbc-sqlite3.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.tzinfo}" dest="${download.dir.jruby}/tzinfo.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.treetop}" dest="${download.dir.jruby}/treetop.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.tilt}" dest="${download.dir.jruby}/tilt.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.thor}" dest="${download.dir.jruby}/thor.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.sprockets}" dest="${download.dir.jruby}/sprockets.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.sources}" dest="${download.dir.jruby}/sources.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.ruby-openid}" dest="${download.dir.jruby}/ruby-openid.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.rdoc}" dest="${download.dir.jruby}/rdoc.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.railties}" dest="${download.dir.jruby}/railties.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.rack}" dest="${download.dir.jruby}/rack.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.rack-test}" dest="${download.dir.jruby}/rack-test.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.rack-ssl}" dest="${download.dir.jruby}/rack-ssl.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.rack-openid}" dest="${download.dir.jruby}/rack-openid.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.rack-cache}" dest="${download.dir.jruby}/rack-cache.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.prototype-rails}" dest="${download.dir.jruby}/prototype-rails.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.polyglot}" dest="${download.dir.jruby}/polyglot.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.net-ldap}" dest="${download.dir.jruby}/net-ldap.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.multi_json}" dest="${download.dir.jruby}/multi_json.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.mime-types}" dest="${download.dir.jruby}/mime-types.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.mail}" dest="${download.dir.jruby}/mail.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.json}" dest="${download.dir.jruby}/json-java.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.jruby-openssl}" dest="${download.dir.jruby}/jruby-openssl.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.bundler}" dest="${download.dir.jruby}/bundler.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.jruby-jars}" dest="${download.dir.jruby}/jruby-jars.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.rubyzip}" dest="${download.dir.jruby}/rubyzip.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.journey}" dest="${download.dir.jruby}/journey.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.jdbc-mysql}" dest="${download.dir.jruby}/jdbc-mysql.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.i18n}" dest="${download.dir.jruby}/i18n.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.hike}" dest="${download.dir.jruby}/hike.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.fastercsv}" dest="${download.dir.jruby}/fastercsv.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.erubis}" dest="${download.dir.jruby}/erubis.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.coderay}" dest="${download.dir.jruby}/coderay.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.builder}" dest="${download.dir.jruby}/builder.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.bouncy-castle-java}" dest="${download.dir.jruby}/bouncy-castle-java.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.arel}" dest="${download.dir.jruby}/arel.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.activeresource}" dest="${download.dir.jruby}/activeresource.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.activerecord-jdbcmysql-adapter}" dest="${download.dir.jruby}/activerecord-jdbcmysql-adapter.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.activerecord-jdbc-adapter}" dest="${download.dir.jruby}/activerecord-jdbc-adapter.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.activemodel}" dest="${download.dir.jruby}/activemodel.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.activesupport}" dest="${download.dir.jruby}/activesupport.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.actionmailer}" dest="${download.dir.jruby}/actionmailer.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.activerecord}" dest="${download.dir.jruby}/activerecord.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.actionpack}" dest="${download.dir.jruby}/actionpack.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.rails}" dest="${download.dir.jruby}/rails.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.jruby-rack}" dest="${download.dir.jruby}/jruby-rack.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.warbler}" dest="${download.dir.jruby}/warbler.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.activerecord-jdbcpostgresql-adapter}" dest="${download.dir.jruby}/activerecord-jdbcpostgresql-adapter.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.activerecord-jdbcsqlite3-adapter}" dest="${download.dir.jruby}/activerecord-dbcsqlite3-adapter.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.jdbc-postgres}" dest="${download.dir.jruby}/jdbc-postgres.gem" verbose="true" usetimestamp="true" />
+		<get src="${url.jruby.jdbc-sqlite3}" dest="${download.dir.jruby}/jdbc-sqlite3.gem" verbose="true" usetimestamp="true" />
 	</target>
 	
 	<target name="download.mysql">
 		<!-- download mysql server -->
 		<mkdir dir="${download.dir.mysql}"/>		
-		<get src="${url.mysql.server}" dest="${download.dir.mysql}\mysqldb.zip" 
+		<get src="${url.mysql.server}" dest="${download.dir.mysql}/mysqldb.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>
 		
 		<!-- download mysql connector -->
 		<mkdir dir="${download.dir.mysql.connector}"/>
-		<get src="${url.mysql.connector}" dest="${download.dir.mysql.connector}\mysqlconnector.zip" 
+		<get src="${url.mysql.connector}" dest="${download.dir.mysql.connector}/mysqlconnector.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>				
 	</target>
@@ -154,7 +154,7 @@
 	<target name="download.opendj">
 		<!-- download opendj server -->
 		<mkdir dir="${download.dir.opendj}"/>		
-		<get src="${url.opendj}" dest="${download.dir.opendj}\opendj.zip" 
+		<get src="${url.opendj}" dest="${download.dir.opendj}/opendj.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>									
 	</target>
@@ -165,7 +165,7 @@
 	<target name="download.redmine">
 		<!-- download redmine -->
 		<mkdir dir="${download.dir.redmine}" />
-		<get src="${url.redmine}" dest="${download.dir.redmine}\redmine.zip" verbose="true" usetimestamp="true" />
+		<get src="${url.redmine}" dest="${download.dir.redmine}/redmine.zip" verbose="true" usetimestamp="true" />
 	</target>
 		
 	<!--
@@ -174,16 +174,16 @@
 	<target name="download.scm">
 		<!-- download sonar -->
 		<mkdir dir="${download.dir.scm}"/>		
-		<get src="${url.scm}" dest="${download.dir.scm}\scm.war" 
+		<get src="${url.scm}" dest="${download.dir.scm}/scm.war" 
 		    verbose="true"
 		    usetimestamp="true"/>	
-		<get src="${url.scm.ldap}" dest="${download.dir.scm}\scm-auth-ldap.jar" 
+		<get src="${url.scm.ldap}" dest="${download.dir.scm}/scm-auth-ldap.jar" 
 		    verbose="true"
 		    usetimestamp="true"/>	
-		<get src="${url.scm.jenkins}" dest="${download.dir.scm}\scm-jenkins.jar" 
+		<get src="${url.scm.jenkins}" dest="${download.dir.scm}/scm-jenkins.jar" 
 		    verbose="true"
 		    usetimestamp="true"/>
-		<get src="${url.scm.client}" dest="${download.dir.scm}\scm-client.jar" 
+		<get src="${url.scm.client}" dest="${download.dir.scm}/scm-client.jar" 
 		    verbose="true"
 		    usetimestamp="true"/>	
 	</target>
@@ -194,12 +194,12 @@
 	<target name="download.selenium">
 		<!-- download selenium server -->
 		<mkdir dir="${download.dir.selenium}"/>		
-		<get src="${url.selenium.server}" dest="${download.dir.selenium}\seleniumserver.jar" 
+		<get src="${url.selenium.server}" dest="${download.dir.selenium}/seleniumserver.jar" 
 		    verbose="true"
 		    usetimestamp="true"/>				
 		<!-- download selenium client Java -->
 		<mkdir dir="${download.dir.selenium}"/>		
-		<get src="${url.selenium.client.java}" dest="${download.dir.selenium}\seleniumclientjava.zip" 
+		<get src="${url.selenium.client.java}" dest="${download.dir.selenium}/seleniumclientjava.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>					
 	</target>
@@ -210,7 +210,7 @@
 	<target name="download.solr">
 		<!-- download solr -->
 		<mkdir dir="${download.dir.solr}"/>		
-		<get src="${url.solr}" dest="${download.dir.solr}\solr.zip" 
+		<get src="${url.solr}" dest="${download.dir.solr}/solr.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>					
 	</target>
@@ -221,19 +221,19 @@
 	<target name="download.sonar">
 		<!-- download sonar -->
 		<mkdir dir="${download.dir.sonar}" />
-		<get src="${url.sonar}" dest="${download.dir.sonar}\sonar.zip" verbose="true" usetimestamp="true" />
+		<get src="${url.sonar}" dest="${download.dir.sonar}/sonar.zip" verbose="true" usetimestamp="true" />
 	</target>
 
 	<target name="download.sonar.anttask">
 		<!-- download sonar ant task -->
 		<mkdir dir="${download.dir.sonar}" />
-		<get src="${url.sonar.anttask}" dest="${download.dir.sonar}\sonaranttask.jar" verbose="true" usetimestamp="true" />
+		<get src="${url.sonar.anttask}" dest="${download.dir.sonar}/sonaranttask.jar" verbose="true" usetimestamp="true" />
 	</target>
 			
 	<target name="download.sonar.ldap">
 		<!-- download sonar ant ldap -->
 		<mkdir dir="${download.dir.sonar}" />
-		<get src="${url.sonar.ldap}" dest="${download.dir.sonar}\sonar-ldap-plugin.jar" verbose="true" usetimestamp="true" />
+		<get src="${url.sonar.ldap}" dest="${download.dir.sonar}/sonar-ldap-plugin.jar" verbose="true" usetimestamp="true" />
 	</target>
 		
 	<!--
@@ -242,7 +242,7 @@
 	<target name="download.svn">
 		<!-- download svn -->
 		<mkdir dir="${download.dir.svn}"/>		
-		<get src="${url.svn}" dest="${download.dir.svn}\svn.zip" 
+		<get src="${url.svn}" dest="${download.dir.svn}/svn.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>					
 	</target>
@@ -253,7 +253,7 @@
 	<target name="download.testng">
 		<!-- download TestNG -->
 		<mkdir dir="${download.dir.testng}"/>		
-		<get src="${url.testng}" dest="${download.dir.testng}\testng.zip" 
+		<get src="${url.testng}" dest="${download.dir.testng}/testng.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>					
 	</target>
@@ -261,7 +261,7 @@
 	<target name="download.tomcat">
 		<!-- download Apache tomcat server -->
 		<mkdir dir="${download.dir.tomcat}"/>		
-		<get src="${url.tomcat}" dest="${download.dir.tomcat}\tomcat.zip" 
+		<get src="${url.tomcat}" dest="${download.dir.tomcat}/tomcat.zip" 
 		    verbose="true"
 		    usetimestamp="true"/>					
 	</target>

@@ -58,7 +58,7 @@
 		<replace file="./install/run.ant" token="MYSQL_PW" value="${mysql.root.pw}"></replace>
 		<replace file="./install/run.ant" token="OPENDJ_DIR" value="${basedir}/${install.dir.opendj}"></replace>
 		<replace file="./install/run.ant" token="TOMCAT_DIR" value="${basedir}/${install.dir.tomcat}"></replace>
-		<replace file="./install/run.ant" token="JENKINS_HOME_DIR" value="${basedir}/${install.dir.jenkins}"></replace>
+		<replace file="./install/run.ant" token="JENKINS_DIR" value="${basedir}/${install.dir.jenkins}"></replace>
 		<replace file="./install/run.ant" token="SELENIUM_DIR" value="${basedir}/${install.dir.selenium}"></replace>
 	</target>
 	

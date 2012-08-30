@@ -37,16 +37,14 @@
 	-->
 	<target name="start.tomcat">
 		<exec executable="cmd" osfamily="Windows" spawn="true" dir="TOMCAT_DIR/bin">
-			<env key="CATALINA_OPTS" value="-DJENKINS_HOME=JENKINS_HOME -Xmx1024m" />
+			<env key="CATALINA_OPTS" value="-DJENKINS_HOME=JENKINS_DIR -Xmx1024m" />
 			<arg value="/c" />
 			<arg value="startup.bat" />
 		</exec>
 	</target>
 
 	<target name="stop.tomcat">
-		<exec executable="cmd" osfamily="Windows" spawn="true" dir="TOMCAT_DIR/bin">			
-			<arg value="/c" />
-			<arg value="shutdown.bat" />
+		<exec executable="TOMCAT_DIR/bin/shutdown.bat" osfamily="windows" spawn="true">
 		</exec>
 	</target>
 
